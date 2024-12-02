@@ -2,23 +2,20 @@ package com.labprog.PortalEgressos.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @AllArgsConstructor @Getter @Setter @Builder @ToString
 public class Cargo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id_cargo")
     private Long id;
-    @Column(name = "descrição")
+    @Column(name = "descrição", nullable = false)
     private String descricao;
+    @Column(name = "local", nullable = false)
     private String local;
-    @Column(name = "ano_inicio")
+    @Column(name = "ano_inicio", nullable = false)
     private Long anoInicio;
     @Column(name = "ano_fim")
     private Long anoFim;
