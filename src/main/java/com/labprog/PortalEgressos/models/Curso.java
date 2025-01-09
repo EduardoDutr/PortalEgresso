@@ -1,19 +1,30 @@
 package com.labprog.PortalEgressos.models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@NoArgsConstructor @AllArgsConstructor @Getter @Setter @Builder @ToString
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Curso {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "nome", nullable = false)
+
+    @Column(nullable = false)
     private String nome;
-    @Column(name = "nivel", nullable = false)
+
+    @Column(nullable = false)
     private String nivel;
 
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CursoEgresso> egressos = new ArrayList<>();
 }

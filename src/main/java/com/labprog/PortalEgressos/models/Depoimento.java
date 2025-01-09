@@ -1,14 +1,19 @@
 package com.labprog.PortalEgressos.models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@AllArgsConstructor @NoArgsConstructor @Getter @Setter @Builder @ToString
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Depoimento {
-
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -16,6 +21,6 @@ public class Depoimento {
     private Date data;
 
     @ManyToOne
-    @JoinColumn(name = "id_egresso", nullable = false)
+    @JoinColumn(name = "id_egresso")
     private Egresso egresso;
 }
