@@ -1,31 +1,36 @@
 package com.labprog.PortalEgressos.service;
 
 import com.labprog.PortalEgressos.models.Curso;
+import com.labprog.PortalEgressos.models.CursoEgresso;
 import com.labprog.PortalEgressos.repositories.CursoRepository;
+import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class CursoService {
-    private final CursoRepository repository;
+    @Autowired
+    private CursoRepository cursoRepository;
 
-    public CursoService(CursoRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private EgressoRepository egressoRepository;
 
     @Transactional
-    public Curso salvar(Curso Curso) {
-        return repository.save(Curso);
+    public Curso salvar(Curso curso) {
+        return cursoRepository.save(curso);
     }
 
     @Transactional
     public void deletar(Curso curso) {
-        repository.delete(curso);
+        cursoRepository.delete(curso);
     }
 
-    public Set<Curso> obterPorEgresso(Long egressoId) {
-        return repository.findAllByEgressoId(egressoId);
+    public List<Curso> obterPorEgresso(Long egressoId) {
+        return egressoRepository.findById(egressoId).orElseThrow().getCursos().stream()
+                .map(CursoEgresso::getCurso)
+                .toList();
     }
 }

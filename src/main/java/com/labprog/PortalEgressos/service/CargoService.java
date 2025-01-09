@@ -3,17 +3,16 @@ package com.labprog.PortalEgressos.service;
 import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
 public class CargoService {
-    private final CargoRepository repository;
 
-    public CargoService(CargoRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private CargoRepository repository;
 
     @Transactional
     public Cargo salvar(Cargo Cargo) {
