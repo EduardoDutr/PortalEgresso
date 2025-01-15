@@ -23,7 +23,7 @@ public class CursoEgresso {
     private Curso curso;
 
     @Column(nullable = false)
-    private Long anoInicio;
+    private Integer anoInicio;
 
-    private Long anoFim;
+    private Integer anoFim;
 }
