@@ -14,21 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Curso {
+public class Coordenador {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nome;
+    private String login;
 
     @Column(nullable = false)
-    private String nivel;
+    private String senha;
 
-    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<CursoEgresso> egressos = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "id_coordenador")
-    private Coordenador coordenador;
+    @OneToMany(mappedBy = "coordenador", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Curso> cursos = new ArrayList<>();
 }
