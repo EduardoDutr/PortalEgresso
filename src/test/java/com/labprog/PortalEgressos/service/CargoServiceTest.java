@@ -1,6 +1,8 @@
 package com.labprog.PortalEgressos.service;
 
 import com.labprog.PortalEgressos.models.Cargo;
+import com.labprog.PortalEgressos.models.Depoimento;
+import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,29 @@ public class CargoServiceTest {
         verify(cargoRepository).save(any());
         assertNotNull(result);
         assertEquals("Desenvolvedor", result.getDescricao());
+    }
+
+    @Test
+    @Transactional
+    public void testAssociarEgresso(){
+        Cargo car = Cargo.builder()
+                .descricao("TesteTexto")
+                .local("SLZ")
+                .anoInicio(1L)
+                .build();
+        Egresso egr = Egresso.builder()
+                .nome("Edu")
+                .email("edu@edu.com")
+                .build();
+
+        when(cargoRepository.save(any(Cargo.class))).thenReturn(car);
+
+        Cargo salvo = cargoService.associarEgresso(car, egr);
+
+        assertNotNull(salvo);
+
+        assertEquals(salvo.getEgresso().getNome(), egr.getNome());
+        assertEquals(salvo.getEgresso().getEmail(), egr.getEmail());
     }
 
     @Test
