@@ -89,4 +89,24 @@ public class CursoServiceTest {
         assertEquals(1, cursos.size());
         assertEquals("Curso de TI", cursos.get(0).getNome());
     }
+
+    @Test
+    @Transactional
+    public void deveAssociarCursoAoEgresso(){
+        Curso cur = new Curso();
+        cur.setNome("Curso de TI");
+        cur.setNivel("Bacharelado");
+
+        Egresso egr = new Egresso();
+        egr.setNome("A");
+        egr.setEmail("a@exemplo.com");
+
+        when(cursoRepository.save(any(Curso.class))).thenReturn(cur);
+
+        var salvo = cursoService.associarEgresso(cur, egr);
+
+        assertNotNull(salvo);
+
+        assertEquals(salvo.getEgressos().getFirst(), egr.getCursos().getFirst());
+    }
 }
