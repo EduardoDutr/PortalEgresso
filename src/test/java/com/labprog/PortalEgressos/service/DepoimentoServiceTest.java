@@ -3,6 +3,7 @@ package com.labprog.PortalEgressos.service;
 import com.labprog.PortalEgressos.models.Depoimento;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.DepoimentoRepository;
+import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ public class DepoimentoServiceTest {
     public void testSalvarDepoimento() {
         when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depoimento);
 
-        Depoimento result = depoimentoService.salvar(depoimento);
+        Depoimento result = depoimentoService.salvar(depoimento, egresso);
 
         verify(depoimentoRepository, times(1)).save(depoimento);
 
@@ -77,6 +78,26 @@ public class DepoimentoServiceTest {
         assertNotNull(depoimentos);
         assertEquals(1, depoimentos.size());
         assertEquals("Excelente curso!", depoimentos.get(0).getTexto());
+    }
+    @Test
+    public void testAssociarEgresso(){
+
+        Depoimento depo = Depoimento.builder()
+                .texto("TesteTexto")
+                .build();
+        Egresso egr = Egresso.builder()
+                .nome("Edu")
+                .email("edu@edu.com")
+                .build();
+
+        when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depo);
+
+        Depoimento salvo = depoimentoService.salvar(depo, egr);
+
+        assertNotNull(salvo);
+
+        assertEquals(salvo.getEgresso().getNome(), egr.getNome());
+        assertEquals(salvo.getEgresso().getEmail(), egr.getEmail());
     }
 }
 
