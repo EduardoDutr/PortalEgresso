@@ -1,9 +1,6 @@
 package com.labprog.PortalEgressos.service;
 
-import com.labprog.PortalEgressos.models.Cargo;
-import com.labprog.PortalEgressos.models.Curso;
-import com.labprog.PortalEgressos.models.CursoEgresso;
-import com.labprog.PortalEgressos.models.Egresso;
+import com.labprog.PortalEgressos.models.*;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import com.labprog.PortalEgressos.repositories.CursoEgressoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
@@ -11,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +21,10 @@ public class EgressoService {
     private CursoEgressoRepository cursoEgressoRepository;
     @Autowired
     private CargoRepository cargoRepository;
+
+    public List<Egresso> obterTodos(){
+        return egressoRepository.findAll();
+    }
 
     @Transactional
     public Egresso salvar(Egresso egresso) {

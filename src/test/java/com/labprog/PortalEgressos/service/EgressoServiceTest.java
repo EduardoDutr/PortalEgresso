@@ -131,5 +131,35 @@ public class EgressoServiceTest {
         assertEquals(1, egressos.size());
         assertTrue(egressos.stream().anyMatch(e -> e.getNome().equals("João")));
     }
+    @Test
+    public void testRecuperarDepoimentos(){
+        when(egressoRepository.findById(1L)).thenReturn(Optional.of(egresso));
+
+        Depoimento depo1 = Depoimento.builder()
+                .texto("Teste1")
+                .build();
+        Depoimento depo2 = Depoimento.builder()
+                .texto("Teste2")
+                .build();
+        Depoimento depo3 = Depoimento.builder()
+                .texto("Teste3")
+                .build();
+
+        depoimentoService.salvar(depo1, egresso);
+        depoimentoService.salvar(depo2, egresso);
+        depoimentoService.salvar(depo3, egresso);
+
+        var salvo = egressoRepository.findById(1L);
+
+        assertNotNull(salvo);
+
+        List<Depoimento> depoimentos = salvo.orElseThrow().getDepoimentos();
+
+        assertEquals(3, depoimentos.size());
+
+        assertTrue(depoimentos.stream().anyMatch(d -> d.getTexto().equals("Teste1")));
+        assertTrue(depoimentos.stream().anyMatch(d -> d.getTexto().equals("Teste2")));
+        assertTrue(depoimentos.stream().anyMatch(d -> d.getTexto().equals("Teste3")));
+    }
 }
 
