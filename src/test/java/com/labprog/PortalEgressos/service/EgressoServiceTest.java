@@ -1,11 +1,9 @@
 package com.labprog.PortalEgressos.service;
 
-import com.labprog.PortalEgressos.models.Cargo;
-import com.labprog.PortalEgressos.models.Curso;
-import com.labprog.PortalEgressos.models.CursoEgresso;
-import com.labprog.PortalEgressos.models.Egresso;
+import com.labprog.PortalEgressos.models.*;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import com.labprog.PortalEgressos.repositories.CursoEgressoRepository;
+import com.labprog.PortalEgressos.repositories.DepoimentoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,8 +33,14 @@ public class EgressoServiceTest {
     @Mock
     private CargoRepository cargoRepository;
 
+    @Mock
+    private DepoimentoRepository depoimentoRepository;
+
     @InjectMocks
     private EgressoService egressoService;
+
+    @InjectMocks
+    private DepoimentoService depoimentoService;
 
     private Egresso egresso;
     private Cargo cargo;
@@ -63,8 +68,8 @@ public class EgressoServiceTest {
         cursoEgresso.setId(1L);
         cursoEgresso.setCurso(curso);
         cursoEgresso.setEgresso(egresso);
-        cursoEgresso.setAnoInicio(2018L);
-        cursoEgresso.setAnoFim(2022L);
+        cursoEgresso.setAnoInicio(2018);
+        cursoEgresso.setAnoFim(2022);
     }
 
     @Test
