@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -39,5 +41,5 @@ public class Egresso {
 
     @OneToMany(mappedBy = "egresso", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("egresso")
-    private List<CursoEgresso> cursos;
+    private Set<CursoEgresso> cursos = new HashSet<>();
 }

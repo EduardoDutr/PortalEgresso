@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CursoService {
@@ -21,14 +23,22 @@ public class CursoService {
     @Autowired
     private EgressoRepository egressoRepository;
 
+    public Curso obter(Long cursoId){
+        return cursoRepository.findById(cursoId).orElseThrow();
+    }
+
+    public List<Curso> obterTodos(){
+        return cursoRepository.findAll();
+    }
+
     @Transactional
     public Curso salvar(Curso curso) {
         return cursoRepository.save(curso);
     }
 
     @Transactional
-    public void deletar(Curso curso) {
-        cursoRepository.delete(curso);
+    public void deletar(Long cursoId) {
+        cursoRepository.deleteById(cursoId);
     }
 
     @Transactional
@@ -42,13 +52,7 @@ public class CursoService {
                 .egresso(egresso)
                 .anoInicio(year)
                 .build();
-        if(egresso.getCursos() == null){
-            egresso.setCursos(new ArrayList<>());
-        }
-        if(curso.getEgressos() == null){
-            curso.setEgressos(new ArrayList<>());
-        }
-        egresso.getCursos().add(cursoEgresso);
+
         curso.getEgressos().add(cursoEgresso);
         return cursoRepository.save(curso);
     }

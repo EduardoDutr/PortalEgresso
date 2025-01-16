@@ -32,8 +32,8 @@ public class CargoService {
     }
 
     @Transactional
-    public void deletar(Cargo cargo) {
-        repository.delete(cargo);
+    public void deletar(Long cargoId) {
+        repository.deleteById(cargoId);
     }
 
     public Set<Cargo> obterPorEgresso(Long egressoId) {

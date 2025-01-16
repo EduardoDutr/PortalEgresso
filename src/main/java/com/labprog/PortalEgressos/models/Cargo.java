@@ -1,11 +1,14 @@
 package com.labprog.PortalEgressos.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@NoArgsConstructor @AllArgsConstructor @Getter @Setter @Builder @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Cargo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

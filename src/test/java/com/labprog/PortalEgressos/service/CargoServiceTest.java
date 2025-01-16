@@ -71,11 +71,11 @@ public class CargoServiceTest {
     @Test
     @Transactional
     public void testDeletarCargo() {
-        doNothing().when(cargoRepository).delete(any(Cargo.class));
+        doNothing().when(cargoRepository).deleteById(any(Long.class));
 
-        cargoService.deletar(cargo);
+        cargoService.deletar(cargo.getId());
 
-        verify(cargoRepository, times(1)).delete(cargo);
+        verify(cargoRepository, times(1)).deleteById(cargo.getId());
     }
 
     @Test

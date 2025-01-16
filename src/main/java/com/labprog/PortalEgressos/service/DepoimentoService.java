@@ -3,6 +3,7 @@ package com.labprog.PortalEgressos.service;
 import com.labprog.PortalEgressos.models.Depoimento;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.DepoimentoRepository;
+import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,13 @@ public class DepoimentoService {
     @Autowired
     private DepoimentoRepository repository;
 
+    @Autowired
+    private EgressoRepository egressoRepository;
+
     @Transactional
-    public Depoimento salvar(Depoimento depoimento, Egresso egresso) {
+    public Depoimento salvar(Depoimento depoimento, Long egressoId) {
+        Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
+
         depoimento.setEgresso(egresso);
         if(egresso.getDepoimentos() == null){
             egresso.setDepoimentos(new ArrayList<>());

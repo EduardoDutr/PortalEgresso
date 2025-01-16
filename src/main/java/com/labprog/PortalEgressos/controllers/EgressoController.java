@@ -1,5 +1,6 @@
 package com.labprog.PortalEgressos.controllers;
 
+import com.labprog.PortalEgressos.DTO.EgressoDTO;
 import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.models.Curso;
 import com.labprog.PortalEgressos.models.Egresso;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Controller
 @RequestMapping(value = "/egresso")
 public class EgressoController {
+
     @Autowired
     EgressoService egressoService;
 
@@ -23,7 +25,10 @@ public class EgressoController {
     public ResponseEntity obterEgressoPorId(@PathVariable Integer egressoId){
         try{
             Egresso egresso = egressoService.obterPorId(egressoId.longValue());
-            return new ResponseEntity(egresso, HttpStatus.OK);
+
+            EgressoDTO egressoDTO = new EgressoDTO(egresso);
+
+            return ResponseEntity.ok(egressoDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -33,7 +38,12 @@ public class EgressoController {
     public ResponseEntity obterTodosEgressos(){
         try {
             List<Egresso> egressos = egressoService.obterTodos();
-            return new ResponseEntity(egressos, HttpStatus.OK);
+
+            List<EgressoDTO> egressosDTO = egressos.stream()
+                    .map(EgressoDTO::new)
+                    .toList();
+
+            return ResponseEntity.ok(egressosDTO);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -43,7 +53,12 @@ public class EgressoController {
     public ResponseEntity obterPorAno(@PathVariable Integer ano){
         try {
             Set<Egresso> egressos = egressoService.obterPorAno(ano.longValue());
-            return new ResponseEntity(egressos, HttpStatus.OK);
+
+            List<EgressoDTO> egressosDTO = egressos.stream()
+                    .map(EgressoDTO::new)
+                    .toList();
+
+            return ResponseEntity.ok(egressosDTO);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -53,7 +68,8 @@ public class EgressoController {
     public ResponseEntity obterPorCargo(@RequestBody Long cargoId){
         try {
             Egresso egresso = egressoService.obterPorCargo(cargoId);
-            return new ResponseEntity(egresso, HttpStatus.OK);
+            EgressoDTO egressoDTO = new EgressoDTO(egresso);
+            return new ResponseEntity(egressoDTO, HttpStatus.OK);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -63,7 +79,12 @@ public class EgressoController {
     public ResponseEntity obterPorCurso(@RequestBody Long cursoId){
         try {
             Set<Egresso> egressos = egressoService.obterPorCurso(cursoId);
-            return new ResponseEntity(egressos, HttpStatus.OK);
+
+            List<EgressoDTO> egressosDTO = egressos.stream()
+                    .map(EgressoDTO::new)
+                    .toList();
+
+            return new ResponseEntity(egressosDTO, HttpStatus.OK);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -72,9 +93,19 @@ public class EgressoController {
     @PostMapping(value = "/salvar")
     public ResponseEntity salvar(@RequestBody Egresso egresso){
         try {
-            Egresso salvo = egressoService.salvar(egresso);
-            return new ResponseEntity(salvo, HttpStatus.CREATED);
+            egressoService.salvar(egresso);
+            return ResponseEntity.ok(HttpStatus.CREATED);
         } catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping(value = "/deletar/{egressoId}")
+    public ResponseEntity deletar(@PathVariable Long egressoId){
+        try {
+            egressoService.deletar(egressoId);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

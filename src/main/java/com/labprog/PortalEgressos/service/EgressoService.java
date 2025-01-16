@@ -32,8 +32,8 @@ public class EgressoService {
     }
 
     @Transactional
-    public void delete(Egresso egresso) {
-        egressoRepository.delete(egresso);
+    public void deletar(Long egressoId) {
+        egressoRepository.deleteById(egressoId);
     }
 
     public Egresso obterPorId(Long id) {

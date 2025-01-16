@@ -88,11 +88,11 @@ public class EgressoServiceTest {
     @Test
     @Transactional
     public void testDeletarEgresso() {
-        doNothing().when(egressoRepository).delete(any(Egresso.class));
+        doNothing().when(egressoRepository).deleteById(any(Long.class));
 
-        egressoService.delete(egresso);
+        egressoService.deletar(egresso.getId());
 
-        verify(egressoRepository, times(1)).delete(egresso);
+        verify(egressoRepository, times(1)).deleteById(egresso.getId());
     }
 
     @Test
