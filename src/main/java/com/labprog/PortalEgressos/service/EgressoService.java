@@ -40,14 +40,14 @@ public class EgressoService {
         return egressoRepository.findById(id).orElseThrow();
     }
 
-    public Set<Egresso> obterPorCurso(Curso curso) {
-        return cursoEgressoRepository.findByCursoId(curso.getId()).stream()
+    public Set<Egresso> obterPorCurso(Long cursoId) {
+        return cursoEgressoRepository.findByCursoId(cursoId).stream()
                 .map(CursoEgresso::getEgresso)
                 .collect(Collectors.toSet());
     }
 
-    public Egresso obterPorCargo(Cargo cargo) {
-        return cargoRepository.findById(cargo.getId())
+    public Egresso obterPorCargo(Long cargoId) {
+        return cargoRepository.findById(cargoId)
                 .map(Cargo::getEgresso)
                 .orElseThrow();
     }

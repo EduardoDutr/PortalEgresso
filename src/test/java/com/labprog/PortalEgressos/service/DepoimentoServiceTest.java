@@ -62,11 +62,11 @@ public class DepoimentoServiceTest {
     @Test
     @Transactional
     public void testDeletarDepoimento() {
-        doNothing().when(depoimentoRepository).delete(any(Depoimento.class));
+        doNothing().when(depoimentoRepository).deleteById(any(Long.class));
 
-        depoimentoService.delete(depoimento);
+        depoimentoService.delete(depoimento.getId());
 
-        verify(depoimentoRepository, times(1)).delete(depoimento);
+        verify(depoimentoRepository, times(1)).deleteById(depoimento.getId());
     }
 
     @Test

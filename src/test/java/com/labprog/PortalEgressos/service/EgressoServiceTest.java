@@ -109,7 +109,7 @@ public class EgressoServiceTest {
     public void testObterPorCurso() {
         when(cursoEgressoRepository.findByCursoId(1L)).thenReturn(Collections.singletonList(cursoEgresso));
 
-        Set<Egresso> egressos = egressoService.obterPorCurso(curso);
+        Set<Egresso> egressos = egressoService.obterPorCurso(curso.getId());
 
         assertNotNull(egressos);
         assertEquals(1, egressos.size());
@@ -120,7 +120,7 @@ public class EgressoServiceTest {
     public void testObterPorCargo() {
         when(cargoRepository.findById(1L)).thenReturn(Optional.of(cargo));
 
-        Egresso result = egressoService.obterPorCargo(cargo);
+        Egresso result = egressoService.obterPorCargo(cargo.getId());
 
         assertNotNull(result);
         assertEquals("João", result.getNome());

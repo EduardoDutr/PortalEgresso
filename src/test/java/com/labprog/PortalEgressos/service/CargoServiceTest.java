@@ -4,6 +4,7 @@ import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.models.Depoimento;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
+import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,52 +26,46 @@ public class CargoServiceTest {
     @Mock
     private CargoRepository cargoRepository;
 
+    @Mock
+    private EgressoRepository egressoRepository;
+
     @InjectMocks
     private CargoService cargoService;
 
     private Cargo cargo;
-    private Long egressoId;
+    private Egresso egresso;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        cargo = Cargo.builder().id(1L).descricao("Desenvolvedor").build();
-        egressoId = 1L;
+        cargo = Cargo.builder()
+                .id(1L)
+                .descricao("Desenvolvedor")
+                .build();
+
+        egresso = Egresso.builder()
+                .id(1L)
+                .nome("Teste")
+                .email("Teste@Teste.com")
+                .build();
     }
 
     @Test
     @Transactional
-    public void testSalvarCargo() {
+    public void deveSalvarCargo() {
         when(cargoRepository.save(any(Cargo.class))).thenReturn(cargo);
+        when(egressoRepository.findById(egresso.getId())).thenReturn(Optional.of(egresso));
 
-        Cargo result = cargoService.salvar(cargo);
+        Cargo result = cargoService.criar(cargo, egresso.getId());
 
-        verify(cargoRepository).save(any());
+        verify(cargoRepository).save(any(Cargo.class));
+
         assertNotNull(result);
+
         assertEquals("Desenvolvedor", result.getDescricao());
-    }
 
-    @Test
-    @Transactional
-    public void testAssociarEgresso(){
-        Cargo car = Cargo.builder()
-                .descricao("TesteTexto")
-                .local("SLZ")
-                .anoInicio(1L)
-                .build();
-        Egresso egr = Egresso.builder()
-                .nome("Edu")
-                .email("edu@edu.com")
-                .build();
-
-        when(cargoRepository.save(any(Cargo.class))).thenReturn(car);
-
-        Cargo salvo = cargoService.associarEgresso(car, egr);
-
-        assertNotNull(salvo);
-
-        assertEquals(salvo.getEgresso().getNome(), egr.getNome());
-        assertEquals(salvo.getEgresso().getEmail(), egr.getEmail());
+        assertEquals(result.getEgresso().getNome(), egresso.getNome());
+        assertEquals(result.getEgresso().getEmail(), egresso.getEmail());
     }
 
     @Test
@@ -87,9 +83,9 @@ public class CargoServiceTest {
         Set<Cargo> cargosSet = new HashSet<>();
         cargosSet.add(cargo);
 
-        when(cargoRepository.findAllByEgressoId(egressoId)).thenReturn(cargosSet);
+        when(cargoRepository.findAllByEgressoId(egresso.getId())).thenReturn(cargosSet);
 
-        Set<Cargo> result = cargoService.obterPorEgresso(egressoId);
+        Set<Cargo> result = cargoService.obterPorEgresso(egresso.getId());
 
         assertNotNull(result);
         assertEquals(1, result.size());

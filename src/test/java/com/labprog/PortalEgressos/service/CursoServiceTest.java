@@ -94,16 +94,21 @@ public class CursoServiceTest {
     @Transactional
     public void deveAssociarCursoAoEgresso(){
         Curso cur = new Curso();
+        cur.setId(1L);
         cur.setNome("Curso de TI");
         cur.setNivel("Bacharelado");
 
         Egresso egr = new Egresso();
+        egr.setId(1L);
         egr.setNome("A");
         egr.setEmail("a@exemplo.com");
 
         when(cursoRepository.save(any(Curso.class))).thenReturn(cur);
 
-        var salvo = cursoService.associarEgresso(cur, egr);
+        when(cursoRepository.findById(1L)).thenReturn(Optional.of(cur));
+        when(egressoRepository.findById(1L)).thenReturn(Optional.of(egr));
+
+        var salvo = cursoService.associarEgresso(cur.getId(), egr.getId());
 
         assertNotNull(salvo);
 

@@ -32,7 +32,10 @@ public class CursoService {
     }
 
     @Transactional
-    public Curso associarEgresso(Curso curso, Egresso egresso){
+    public Curso associarEgresso(Long cursoId, Long egressoId){
+        Curso curso = cursoRepository.findById(cursoId).orElseThrow();
+        Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
+
         Integer year = Year.now().getValue();
         CursoEgresso cursoEgresso = CursoEgresso.builder()
                 .curso(curso)

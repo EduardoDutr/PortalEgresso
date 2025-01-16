@@ -50,9 +50,9 @@ public class EgressoController {
     }
 
     @PostMapping(value = "/obterPorCargo")
-    public ResponseEntity obterPorCargo(@RequestBody Cargo cargo){
+    public ResponseEntity obterPorCargo(@RequestBody Long cargoId){
         try {
-            Egresso egresso = egressoService.obterPorCargo(cargo); // TODO: Acho que deveria ser uma lista
+            Egresso egresso = egressoService.obterPorCargo(cargoId);
             return new ResponseEntity(egresso, HttpStatus.OK);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -60,9 +60,9 @@ public class EgressoController {
     }
 
     @PostMapping(value = "/obterPorCurso")
-    public ResponseEntity obterPorCurso(@RequestBody Curso curso){
+    public ResponseEntity obterPorCurso(@RequestBody Long cursoId){
         try {
-            Set<Egresso> egressos = egressoService.obterPorCurso(curso);
+            Set<Egresso> egressos = egressoService.obterPorCurso(cursoId);
             return new ResponseEntity(egressos, HttpStatus.OK);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -3,6 +3,7 @@ package com.labprog.PortalEgressos.service;
 import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
+import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,13 @@ public class CargoService {
 
     @Autowired
     private CargoRepository repository;
+    @Autowired
+    private EgressoRepository egressoRepository;
 
     @Transactional
-    public Cargo salvar(Cargo Cargo) {
-        return repository.save(Cargo);
-    }
+    public Cargo criar(Cargo cargo, Long egressoId){
+        Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
 
-    @Transactional
-    public Cargo associarEgresso(Cargo cargo, Egresso egresso){
         cargo.setEgresso(egresso);
         if(egresso.getDepoimentos() == null){
             egresso.setCargos(new ArrayList<>());

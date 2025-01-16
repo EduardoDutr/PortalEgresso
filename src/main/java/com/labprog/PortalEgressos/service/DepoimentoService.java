@@ -27,8 +27,8 @@ public class DepoimentoService {
     }
 
     @Transactional
-    public void delete(Depoimento depoimento) {
-        repository.delete(depoimento);
+    public void delete(Long depoimentoId) {
+        repository.deleteById(depoimentoId);
     }
 
     public List<Depoimento> obterPorEgresso(Long egressoId) {
