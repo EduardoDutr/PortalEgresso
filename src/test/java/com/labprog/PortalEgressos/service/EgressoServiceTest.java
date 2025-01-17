@@ -150,9 +150,9 @@ public class EgressoServiceTest {
                 .texto("Teste3")
                 .build();
 
-        depoimentoService.salvar(depo1, egresso);
-        depoimentoService.salvar(depo2, egresso);
-        depoimentoService.salvar(depo3, egresso);
+        depoimentoService.salvar(depo1, egresso.getId());
+        depoimentoService.salvar(depo2, egresso.getId());
+        depoimentoService.salvar(depo3, egresso.getId());
 
         var salvo = egressoRepository.findById(1L);
 

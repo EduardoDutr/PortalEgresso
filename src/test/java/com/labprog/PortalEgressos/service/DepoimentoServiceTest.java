@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,6 +25,8 @@ public class DepoimentoServiceTest {
 
     @Mock
     private DepoimentoRepository depoimentoRepository;
+    @Mock
+    private EgressoRepository egressoRepository;
 
     @InjectMocks
     private DepoimentoService depoimentoService;
@@ -50,8 +53,9 @@ public class DepoimentoServiceTest {
     @Transactional
     public void testSalvarDepoimento() {
         when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depoimento);
+        when(egressoRepository.findById(egresso.getId())).thenReturn(Optional.of(egresso));
 
-        Depoimento result = depoimentoService.salvar(depoimento, egresso);
+        Depoimento result = depoimentoService.salvar(depoimento, egresso.getId());
 
         verify(depoimentoRepository, times(1)).save(depoimento);
 
@@ -91,8 +95,9 @@ public class DepoimentoServiceTest {
                 .build();
 
         when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depo);
+        when(egressoRepository.findById(egr.getId())).thenReturn(Optional.of(egr));
 
-        Depoimento salvo = depoimentoService.salvar(depo, egr);
+        Depoimento salvo = depoimentoService.salvar(depo, egr.getId());
 
         assertNotNull(salvo);
 
