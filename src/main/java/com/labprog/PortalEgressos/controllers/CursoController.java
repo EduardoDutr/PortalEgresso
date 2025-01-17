@@ -38,8 +38,10 @@ public class CursoController {
                     .nivel(cursoDTO.getNivel())
                     .build();
 
-            cursoService.salvar(curso);
-            return ResponseEntity.ok(HttpStatus.CREATED);
+            Curso salvo = cursoService.salvar(curso);
+            CursoDTO salvoDTO = new CursoDTO(salvo);
+
+            return ResponseEntity.ok(salvoDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

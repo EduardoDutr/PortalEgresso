@@ -93,8 +93,9 @@ public class EgressoController {
     @PostMapping(value = "/salvar")
     public ResponseEntity salvar(@RequestBody Egresso egresso){
         try {
-            egressoService.salvar(egresso);
-            return ResponseEntity.ok(HttpStatus.CREATED);
+            Egresso salvo = egressoService.salvar(egresso);
+            EgressoDTO egressoDTO = new EgressoDTO(salvo);
+            return ResponseEntity.ok(egressoDTO);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

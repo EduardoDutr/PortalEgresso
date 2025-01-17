@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.List;
+
+@Controller
+@RequestMapping(value = "/depoimento")
 public class DepoimentoController {
 
     @Autowired
@@ -28,9 +29,33 @@ public class DepoimentoController {
                     .texto(depoimentoDTO.getTexto())
                     .data(depoimentoDTO.getData())
                     .build();
-            depoimentoService.salvar(depoimento, depoimentoDTO.getEgressoId());
-            return ResponseEntity.ok(HttpStatus.CREATED);
+            Depoimento salvo = depoimentoService.salvar(depoimento, depoimentoDTO.getEgressoId());
+            DepoimentoDTO salvoDTO = new DepoimentoDTO(salvo);
+            return ResponseEntity.ok(salvoDTO);
         } catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping(value = "/deletar/{depoimentoId}")
+    public ResponseEntity deletar(@PathVariable Long depoimentoId){
+        try{
+            depoimentoService.delete(depoimentoId);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        } catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/obterPorEgresso/{egressoId}")
+    public ResponseEntity obterPorEgresso(@PathVariable Long egressoId){
+        try{
+            List<Depoimento> depoimentos = depoimentoService.obterPorEgresso(egressoId);
+            List<DepoimentoDTO> depoimentosDTO = depoimentos.stream()
+                    .map(DepoimentoDTO::new)
+                    .toList();
+            return ResponseEntity.ok(depoimentosDTO);
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

@@ -30,8 +30,10 @@ public class CargoController {
                     .anoFim(cargoDTO.getAnoFim())
                     .build();
 
-            cargoService.criar(cargo, cargoDTO.getEgressoId());
-            return ResponseEntity.ok(HttpStatus.CREATED);
+            Cargo salvo = cargoService.criar(cargo, cargoDTO.getEgressoId());
+            CargoDTO salvoDTO = new CargoDTO(salvo);
+
+            return ResponseEntity.ok(salvoDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
