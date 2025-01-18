@@ -1,5 +1,6 @@
 package com.labprog.PortalEgressos.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class Coordenador {
     private String login;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String senha;
 
     @OneToMany(mappedBy = "coordenador", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
