@@ -44,7 +44,7 @@ public class CargoController {
     public ResponseEntity deletar(@PathVariable Long cargoId){
         try{
             cargoService.deletar(cargoId);
-            return ResponseEntity.ok(HttpStatus.CREATED);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

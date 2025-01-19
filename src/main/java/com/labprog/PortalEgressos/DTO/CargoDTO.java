@@ -2,12 +2,14 @@ package com.labprog.PortalEgressos.DTO;
 
 import com.labprog.PortalEgressos.models.Cargo;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CargoDTO {
     private Long id;
     private String descricao;

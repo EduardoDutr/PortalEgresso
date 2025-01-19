@@ -42,7 +42,7 @@ public class CursoService {
     }
 
     @Transactional
-    public Curso associarEgresso(Long cursoId, Long egressoId){
+    public Curso associarEgresso(Long egressoId, Long cursoId){
         Curso curso = cursoRepository.findById(cursoId).orElseThrow();
         Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
 

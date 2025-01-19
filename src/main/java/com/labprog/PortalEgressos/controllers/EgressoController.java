@@ -22,9 +22,9 @@ public class EgressoController {
     EgressoService egressoService;
 
     @GetMapping(value = "/obter/{egressoId}")
-    public ResponseEntity obterEgressoPorId(@PathVariable Integer egressoId){
+    public ResponseEntity obterEgressoPorId(@PathVariable Long egressoId){
         try{
-            Egresso egresso = egressoService.obterPorId(egressoId.longValue());
+            Egresso egresso = egressoService.obterPorId(egressoId);
 
             EgressoDTO egressoDTO = new EgressoDTO(egresso);
 
@@ -49,10 +49,10 @@ public class EgressoController {
         }
     }
 
-    @PostMapping(value = "/obterPorAno/{ano}")
-    public ResponseEntity obterPorAno(@PathVariable Integer ano){
+    @GetMapping(value = "/obterPorAno/{ano}")
+    public ResponseEntity obterPorAno(@PathVariable Long ano){
         try {
-            Set<Egresso> egressos = egressoService.obterPorAno(ano.longValue());
+            Set<Egresso> egressos = egressoService.obterPorAno(ano);
 
             List<EgressoDTO> egressosDTO = egressos.stream()
                     .map(EgressoDTO::new)
@@ -64,19 +64,19 @@ public class EgressoController {
         }
     }
 
-    @PostMapping(value = "/obterPorCargo")
-    public ResponseEntity obterPorCargo(@RequestBody Long cargoId){
+    @GetMapping(value = "/obterPorCargoId/{cargoId}")
+    public ResponseEntity obterPorCargoId(@PathVariable Long cargoId){
         try {
             Egresso egresso = egressoService.obterPorCargo(cargoId);
             EgressoDTO egressoDTO = new EgressoDTO(egresso);
-            return new ResponseEntity(egressoDTO, HttpStatus.OK);
+            return ResponseEntity.ok(egressoDTO);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PostMapping(value = "/obterPorCurso")
-    public ResponseEntity obterPorCurso(@RequestBody Long cursoId){
+    @GetMapping(value = "/obterPorCursoId/{cursoId}")
+    public ResponseEntity obterPorCursoId(@PathVariable Long cursoId){
         try {
             Set<Egresso> egressos = egressoService.obterPorCurso(cursoId);
 
@@ -84,7 +84,7 @@ public class EgressoController {
                     .map(EgressoDTO::new)
                     .toList();
 
-            return new ResponseEntity(egressosDTO, HttpStatus.OK);
+            return ResponseEntity.ok(egressosDTO);
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

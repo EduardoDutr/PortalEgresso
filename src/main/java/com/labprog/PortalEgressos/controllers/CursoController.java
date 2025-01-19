@@ -60,9 +60,9 @@ public class CursoController {
 
     @GetMapping
     @RequestMapping(value = "/associar/{egressoId}/{cursoId}")
-    public ResponseEntity associar(@PathVariable Long cursoId, @PathVariable Long egressoId){
+    public ResponseEntity associar(@PathVariable Long egressoId, @PathVariable Long cursoId){
         try{
-            cursoService.associarEgresso(cursoId, egressoId);
+            cursoService.associarEgresso(egressoId, cursoId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

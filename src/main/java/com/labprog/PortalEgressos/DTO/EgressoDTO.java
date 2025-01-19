@@ -2,12 +2,14 @@ package com.labprog.PortalEgressos.DTO;
 
 import com.labprog.PortalEgressos.models.Egresso;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class EgressoDTO {
     private Long id;
     private String nome;
