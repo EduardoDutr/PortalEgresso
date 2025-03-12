@@ -4,6 +4,7 @@ import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
+import com.labprog.PortalEgressos.service.auth.UserProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +24,9 @@ import static org.mockito.Mockito.*;
 public class CargoServiceTest {
 
     @Mock
+    private UserProvider userProvider;
+
+    @Mock
     private CargoRepository cargoRepository;
 
     @Mock
@@ -40,6 +44,8 @@ public class CargoServiceTest {
         cargo = Cargo.builder()
                 .id(1L)
                 .descricao("Desenvolvedor")
+                .local("oi")
+                .anoInicio(1L)
                 .build();
 
         egresso = Egresso.builder()
@@ -53,6 +59,7 @@ public class CargoServiceTest {
     @Transactional
     public void deveSalvarCargo() {
         when(cargoRepository.save(any(Cargo.class))).thenReturn(cargo);
+        when(userProvider.userIsAdmin()).thenReturn(true);
         when(egressoRepository.findById(egresso.getId())).thenReturn(Optional.of(egresso));
 
         Cargo result = cargoService.criar(cargo, egresso.getId());
@@ -71,6 +78,7 @@ public class CargoServiceTest {
     @Transactional
     public void testDeletarCargo() {
         doNothing().when(cargoRepository).deleteById(any(Long.class));
+        when(userProvider.userIsAdmin()).thenReturn(true);
 
         cargoService.deletar(cargo.getId());
 

@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @WebMvcTest(controllers = CargoController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class CargoControllerTest {
 
     static final String API = "/cargo";
@@ -79,7 +79,7 @@ public class CargoControllerTest {
         doNothing().when(cargoService).deletar(any(Long.class));
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(API + "/deletar/1");
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
