@@ -17,25 +17,18 @@ public class CursoController {
 
     @GetMapping("/obterTodos")
     public ResponseEntity<?> obterTodos(){
-        try{
-            List<Curso> cursos = cursoService.obterTodos();
-            List<CursoDTO> cursosDTO = cursos.stream()
-                    .map(CursoDTO::new)
-                    .toList();
-            return ResponseEntity.ok(cursosDTO);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        List<Curso> cursos = cursoService.obterTodos();
+        List<CursoDTO> cursosDTO = cursos.stream()
+                .map(CursoDTO::new)
+                .toList();
+        return ResponseEntity.ok(cursosDTO);
     }
+
     @GetMapping("/obter/{cursoId}")
     public ResponseEntity<?> obter(@PathVariable Long cursoId){
-        try{
-            Curso result = cursoService.obter(cursoId);
-            CursoDTO resultDTO = new CursoDTO(result);
-            return ResponseEntity.ok(resultDTO);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Curso result = cursoService.obter(cursoId);
+        CursoDTO resultDTO = new CursoDTO(result);
+        return ResponseEntity.ok(resultDTO);
     }
 
     @PostMapping("/salvar")
