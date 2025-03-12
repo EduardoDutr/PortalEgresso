@@ -37,6 +37,6 @@ public class CargoService {
     }
 
     public Set<Cargo> obterPorEgresso(Long egressoId) {
-        return repository.findAllByEgressoId(egressoId);
+        return repository.findAllByActiveEgressoId(egressoId);
     }
 }

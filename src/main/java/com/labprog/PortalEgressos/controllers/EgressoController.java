@@ -1,9 +1,8 @@
 package com.labprog.PortalEgressos.controllers;
 
 import com.labprog.PortalEgressos.DTO.EgressoDTO;
-import com.labprog.PortalEgressos.models.Cargo;
-import com.labprog.PortalEgressos.models.Curso;
 import com.labprog.PortalEgressos.models.Egresso;
+import com.labprog.PortalEgressos.models.Egresso.Status;
 import com.labprog.PortalEgressos.service.EgressoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class EgressoController {
     @GetMapping(value = "/obterTodos")
     public ResponseEntity obterTodosEgressos(){
         try {
-            List<Egresso> egressos = egressoService.obterTodos();
+            List<Egresso> egressos = egressoService.ativos();
 
             List<EgressoDTO> egressosDTO = egressos.stream()
                     .map(EgressoDTO::new)
@@ -111,4 +110,15 @@ public class EgressoController {
         }
     }
 
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<EgressoDTO>> obterPendentes() {
+        List<EgressoDTO> egressos = egressoService.obterPendentes().stream().map(EgressoDTO::new).toList();
+        return ResponseEntity.ok().body(egressos);
+    }
+
+    @PutMapping(value = "/{egressoId}/{status}")
+    public ResponseEntity<Void> atualizarStatus(@PathVariable Long egressoId, @PathVariable Status status) {
+        egressoService.atualizarStatus(egressoId, status);
+        return ResponseEntity.noContent().build();
+    }
 }

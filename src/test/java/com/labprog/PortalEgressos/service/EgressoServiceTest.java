@@ -1,9 +1,9 @@
 package com.labprog.PortalEgressos.service;
 
-import com.labprog.PortalEgressos.models.*;
-import com.labprog.PortalEgressos.repositories.CargoRepository;
-import com.labprog.PortalEgressos.repositories.CursoEgressoRepository;
-import com.labprog.PortalEgressos.repositories.DepoimentoRepository;
+import com.labprog.PortalEgressos.models.Cargo;
+import com.labprog.PortalEgressos.models.Curso;
+import com.labprog.PortalEgressos.models.CursoEgresso;
+import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,13 +26,7 @@ public class EgressoServiceTest {
     private EgressoRepository egressoRepository;
 
     @Mock
-    private CursoEgressoRepository cursoEgressoRepository;
-
-    @Mock
-    private CargoRepository cargoRepository;
-
-    @Mock
-    private DepoimentoRepository depoimentoRepository;
+    private UserProvider userProvider;
 
     @InjectMocks
     private EgressoService egressoService;
@@ -75,6 +67,7 @@ public class EgressoServiceTest {
     @Test
     @Transactional
     public void testSalvarEgresso() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
         when(egressoRepository.save(any(Egresso.class))).thenReturn(egresso);
 
         Egresso result = egressoService.salvar(egresso);
@@ -88,6 +81,7 @@ public class EgressoServiceTest {
     @Test
     @Transactional
     public void testDeletarEgresso() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
         doNothing().when(egressoRepository).deleteById(any(Long.class));
 
         egressoService.deletar(egresso.getId());
@@ -97,7 +91,7 @@ public class EgressoServiceTest {
 
     @Test
     public void testObterPorId() {
-        when(egressoRepository.findById(1L)).thenReturn(Optional.of(egresso));
+        when(egressoRepository.findActiveById(1L)).thenReturn(Optional.of(egresso));
 
         Egresso result = egressoService.obterPorId(1L);
 
@@ -107,7 +101,7 @@ public class EgressoServiceTest {
 
     @Test
     public void testObterPorCurso() {
-        when(cursoEgressoRepository.findByCursoId(1L)).thenReturn(Collections.singletonList(cursoEgresso));
+        when(egressoRepository.findActiveByCursoId(1L)).thenReturn(Set.of(egresso));
 
         Set<Egresso> egressos = egressoService.obterPorCurso(curso.getId());
 
@@ -118,7 +112,7 @@ public class EgressoServiceTest {
 
     @Test
     public void testObterPorCargo() {
-        when(cargoRepository.findById(1L)).thenReturn(Optional.of(cargo));
+        when(egressoRepository.findActiveByCargoId(1L)).thenReturn(Optional.of(egresso));
 
         Egresso result = egressoService.obterPorCargo(cargo.getId());
 
@@ -128,43 +122,13 @@ public class EgressoServiceTest {
 
     @Test
     public void testObterPorAno() {
-        when(cursoEgressoRepository.findByAnoFim(2022L)).thenReturn(Collections.singletonList(cursoEgresso));
+        when(egressoRepository.findActiveByAnoFim(2022L)).thenReturn(Set.of(egresso));
 
         Set<Egresso> egressos = egressoService.obterPorAno(2022L);
 
         assertNotNull(egressos);
         assertEquals(1, egressos.size());
         assertTrue(egressos.stream().anyMatch(e -> e.getNome().equals("João")));
-    }
-    @Test
-    public void testRecuperarDepoimentos(){
-        when(egressoRepository.findById(1L)).thenReturn(Optional.of(egresso));
-
-        Depoimento depo1 = Depoimento.builder()
-                .texto("Teste1")
-                .build();
-        Depoimento depo2 = Depoimento.builder()
-                .texto("Teste2")
-                .build();
-        Depoimento depo3 = Depoimento.builder()
-                .texto("Teste3")
-                .build();
-
-        depoimentoService.salvar(depo1, egresso.getId());
-        depoimentoService.salvar(depo2, egresso.getId());
-        depoimentoService.salvar(depo3, egresso.getId());
-
-        var salvo = egressoRepository.findById(1L);
-
-        assertNotNull(salvo);
-
-        List<Depoimento> depoimentos = salvo.orElseThrow().getDepoimentos();
-
-        assertEquals(3, depoimentos.size());
-
-        assertTrue(depoimentos.stream().anyMatch(d -> d.getTexto().equals("Teste1")));
-        assertTrue(depoimentos.stream().anyMatch(d -> d.getTexto().equals("Teste2")));
-        assertTrue(depoimentos.stream().anyMatch(d -> d.getTexto().equals("Teste3")));
     }
 }
 

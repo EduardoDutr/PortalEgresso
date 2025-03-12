@@ -82,7 +82,7 @@ public class EgressoControllerTest {
         egressoList.add(egresso1);
         egressoList.add(egresso2);
 
-        when(egressoService.obterTodos()).thenReturn(egressoList);
+        when(egressoService.ativos()).thenReturn(egressoList);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/obterTodos");
 

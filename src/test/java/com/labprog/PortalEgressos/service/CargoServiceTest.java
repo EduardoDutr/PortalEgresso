@@ -1,7 +1,6 @@
 package com.labprog.PortalEgressos.service;
 
 import com.labprog.PortalEgressos.models.Cargo;
-import com.labprog.PortalEgressos.models.Depoimento;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
@@ -83,7 +82,7 @@ public class CargoServiceTest {
         Set<Cargo> cargosSet = new HashSet<>();
         cargosSet.add(cargo);
 
-        when(cargoRepository.findAllByEgressoId(egresso.getId())).thenReturn(cargosSet);
+        when(cargoRepository.findAllByActiveEgressoId(egresso.getId())).thenReturn(cargosSet);
 
         Set<Cargo> result = cargoService.obterPorEgresso(egresso.getId());
 

@@ -22,7 +22,7 @@ public class DepoimentoService {
 
     @Transactional
     public Depoimento salvar(Depoimento depoimento, Long egressoId) {
-        Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
+        Egresso egresso = egressoRepository.findActiveById(egressoId).orElseThrow();
 
         depoimento.setEgresso(egresso);
         if(egresso.getDepoimentos() == null){
@@ -38,6 +38,6 @@ public class DepoimentoService {
     }
 
     public List<Depoimento> obterPorEgresso(Long egressoId) {
-        return repository.findAllByEgressoId(egressoId);
+        return repository.findAllByActiveEgressoId(egressoId);
     }
 }

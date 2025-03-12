@@ -53,7 +53,7 @@ public class DepoimentoServiceTest {
     @Transactional
     public void testSalvarDepoimento() {
         when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depoimento);
-        when(egressoRepository.findById(egresso.getId())).thenReturn(Optional.of(egresso));
+        when(egressoRepository.findActiveById(egresso.getId())).thenReturn(Optional.of(egresso));
 
         Depoimento result = depoimentoService.salvar(depoimento, egresso.getId());
 
@@ -75,7 +75,7 @@ public class DepoimentoServiceTest {
 
     @Test
     public void testObterDepoimentosPorEgresso() {
-        when(depoimentoRepository.findAllByEgressoId(1L)).thenReturn(Arrays.asList(depoimento));
+        when(depoimentoRepository.findAllByActiveEgressoId(1L)).thenReturn(Arrays.asList(depoimento));
 
         List<Depoimento> depoimentos = depoimentoService.obterPorEgresso(1L);
 
@@ -95,7 +95,7 @@ public class DepoimentoServiceTest {
                 .build();
 
         when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depo);
-        when(egressoRepository.findById(egr.getId())).thenReturn(Optional.of(egr));
+        when(egressoRepository.findActiveById(egr.getId())).thenReturn(Optional.of(egr));
 
         Depoimento salvo = depoimentoService.salvar(depo, egr.getId());
 

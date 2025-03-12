@@ -31,6 +31,9 @@ public class Egresso {
     private String instagram;
     private String curriculo;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @OneToMany(mappedBy = "egresso", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("egresso")
     private List<Depoimento> depoimentos;
@@ -42,4 +45,10 @@ public class Egresso {
     @OneToMany(mappedBy = "egresso", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("egresso")
     private Set<CursoEgresso> cursos = new HashSet<>();
+
+    public enum Status {
+        ACTIVE,
+        REJECTED,
+        PENDING
+    }
 }
