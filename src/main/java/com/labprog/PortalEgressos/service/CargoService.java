@@ -40,6 +40,7 @@ public class CargoService {
 
     @Transactional
     public void deletar(Long cargoId) {
+        validateUserAuthenticated();
         repository.deleteById(cargoId);
     }
 
