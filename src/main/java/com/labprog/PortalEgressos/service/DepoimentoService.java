@@ -55,8 +55,12 @@ public class DepoimentoService {
     }
 
     private void validar(Depoimento depoimento) {
-        if (depoimento == null || depoimento.getTexto() == null) {
-            throw new InvalidDepoimentoException();
+        if (depoimento == null) {
+            throw new InvalidDepoimentoException("O depoimento não pode ser nulo.");
+        }
+        if (depoimento.getTexto() == null) {
+            throw new InvalidDepoimentoException("O texto do depoimento não pode ser nulo.");
         }
     }
+
 }

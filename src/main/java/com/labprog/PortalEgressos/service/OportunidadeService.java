@@ -64,8 +64,15 @@ public class OportunidadeService {
     }
 
     private void validar(Oportunidade oportunidade) {
-        if (oportunidade == null || oportunidade.getTitulo() == null || oportunidade.getUrl() == null) {
-            throw new InvalidOportunidadeException();
+        if (oportunidade == null) {
+            throw new InvalidOportunidadeException("A oportunidade não pode ser nula.");
+        }
+        if (oportunidade.getTitulo() == null) {
+            throw new InvalidOportunidadeException("O título da oportunidade não pode ser nulo.");
+        }
+        if (oportunidade.getUrl() == null) {
+            throw new InvalidOportunidadeException("A URL da oportunidade não pode ser nula.");
         }
     }
+
 }

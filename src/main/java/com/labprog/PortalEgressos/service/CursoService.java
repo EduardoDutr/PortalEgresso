@@ -67,7 +67,8 @@ public class CursoService {
     }
 
     public List<Curso> obterPorEgresso(Long egressoId) {
-        return egressoRepository.findById(egressoId).orElseThrow().getCursos().stream()
+        return egressoRepository.findById(egressoId).orElseThrow(() -> new EgressoNotFoundException(egressoId))
+                .getCursos().stream()
                 .map(CursoEgresso::getCurso)
                 .toList();
     }
@@ -79,14 +80,31 @@ public class CursoService {
     }
 
     private void validar(Long egressoId, Long cursoId, Long anoInicio, Long anoFim) {
-        if (egressoId == null || cursoId == null || anoInicio == null || anoFim == null) {
-            throw new IllegalArgumentException();
+        if (egressoId == null) {
+            throw new IllegalArgumentException("O ID do egresso não pode ser nulo.");
+        }
+        if (cursoId == null) {
+            throw new IllegalArgumentException("O ID do curso não pode ser nulo.");
+        }
+        if (anoInicio == null) {
+            throw new IllegalArgumentException("O ano de início do egresso no curso não pode ser nulo.");
+        }
+        if (anoFim == null) {
+            throw new IllegalArgumentException("O ano de fim do egresso no curso não pode ser nulo.");
         }
     }
 
+
     private void validar(Curso curso) {
-        if (curso == null || curso.getNome() == null || curso.getNivel() == null) {
-            throw new InvalidCursoException();
+        if (curso == null) {
+            throw new InvalidCursoException("O curso não pode ser nulo.");
+        }
+        if (curso.getNome() == null) {
+            throw new InvalidCursoException("O nome do curso não pode ser nulo.");
+        }
+        if (curso.getNivel() == null) {
+            throw new InvalidCursoException("O nível do curso não pode ser nulo.");
         }
     }
+
 }

@@ -55,14 +55,19 @@ public class CargoService {
     }
 
     private void validar(Cargo cargo) {
-        if (
-            cargo == null ||
-            cargo.getDescricao() == null ||
-            cargo.getLocal() == null ||
-            cargo.getAnoInicio() == null
-        ) {
-            throw new InvalidCargoException();
+        if (cargo == null) {
+            throw new InvalidCargoException("O cargo não pode ser nulo.");
+        }
+        if (cargo.getDescricao() == null) {
+            throw new InvalidCargoException("A descrição do cargo não pode ser nula.");
+        }
+        if (cargo.getLocal() == null) {
+            throw new InvalidCargoException("O local do cargo não pode ser nulo.");
+        }
+        if (cargo.getAnoInicio() == null) {
+            throw new InvalidCargoException("O ano de início do cargo não pode ser nulo.");
         }
     }
+
 
 }

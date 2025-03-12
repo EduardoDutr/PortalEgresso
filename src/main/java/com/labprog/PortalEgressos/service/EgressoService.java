@@ -77,10 +77,15 @@ public class EgressoService {
     }
 
     private void validate(Egresso egresso) {
-        if (egresso == null ||
-            egresso.getNome() == null ||
-            egresso.getEmail() == null) {
-            throw new InvalidEgressoException();
+        if (egresso == null) {
+            throw new InvalidEgressoException("O egresso não pode ser nulo.");
+        }
+        if (egresso.getNome() == null) {
+            throw new InvalidEgressoException("O nome do egresso não pode ser nulo.");
+        }
+        if (egresso.getEmail() == null) {
+            throw new InvalidEgressoException("O e-mail do egresso não pode ser nulo.");
         }
     }
+
 }
