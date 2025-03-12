@@ -31,6 +31,10 @@ public class CursoService {
         return cursoRepository.findById(cursoId).orElseThrow(() -> new CursoNotFoundException(cursoId));
     }
 
+    public List<Curso> obterTodos(){
+        return cursoRepository.findAll();
+    }
+
     @Transactional
     public Curso salvar(Curso curso) {
         validateUserAuthenticated();

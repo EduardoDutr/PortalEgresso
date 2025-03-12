@@ -17,6 +17,19 @@ public class CursoController {
     CursoService cursoService;
 
     @GetMapping
+    @RequestMapping(value = "/obterTodos")
+    public ResponseEntity<?> obterTodos(){
+        try{
+            List<Curso> cursos = cursoService.obterTodos();
+            List<CursoDTO> cursosDTO = cursos.stream()
+                    .map(CursoDTO::new)
+                    .toList();
+            return ResponseEntity.ok(cursosDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @GetMapping
     @RequestMapping(value = "/obter/{cursoId}")
     public ResponseEntity<?> obter(@PathVariable Long cursoId){
         try{

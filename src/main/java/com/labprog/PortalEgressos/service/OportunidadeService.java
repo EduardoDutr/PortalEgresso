@@ -34,7 +34,6 @@ public class OportunidadeService {
 
     @Transactional
     public Oportunidade salvar(Oportunidade oportunidade) {
-        validateUserAuthenticated();
         validar(oportunidade);
         oportunidade.setStatus(userIsAuthenticated() ? ACTIVE : PENDING);
         return repository.save(oportunidade);
