@@ -4,6 +4,9 @@ import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
+import com.labprog.PortalEgressos.service.auth.UserProvider;
+import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
+import com.labprog.PortalEgressos.service.exceptions.InvalidCargoException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +21,13 @@ public class CargoService {
     private CargoRepository repository;
     @Autowired
     private EgressoRepository egressoRepository;
+    @Autowired
+    private UserProvider userProvider;
 
     @Transactional
     public Cargo criar(Cargo cargo, Long egressoId){
+        validateUserAuthenticated();
+        validar(cargo);
         Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
 
         cargo.setEgresso(egresso);
@@ -39,4 +46,22 @@ public class CargoService {
     public Set<Cargo> obterPorEgresso(Long egressoId) {
         return repository.findAllByActiveEgressoId(egressoId);
     }
+
+    private void validateUserAuthenticated() {
+        if (!userProvider.userIsAdmin()) {
+            throw new AuthorizationException();
+        }
+    }
+
+    private void validar(Cargo cargo) {
+        if (
+            cargo == null ||
+            cargo.getDescricao() == null ||
+            cargo.getLocal() == null ||
+            cargo.getAnoInicio() == null
+        ) {
+            throw new InvalidCargoException();
+        }
+    }
+
 }

@@ -15,7 +15,9 @@ public class Depoimento {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String texto;
+    @Column(nullable = false)
     private Date data;
 
     @ManyToOne

@@ -27,8 +27,4 @@ public class Curso {
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("curso")
     private Set<CursoEgresso> egressos = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "id_coordenador")
-    private Coordenador coordenador;
 }

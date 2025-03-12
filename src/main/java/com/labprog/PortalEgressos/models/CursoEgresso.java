@@ -31,6 +31,7 @@ public class CursoEgresso {
     @Column(nullable = false)
     private Integer anoInicio;
 
+    @Column(nullable = false)
     private Integer anoFim;
 
     @Override

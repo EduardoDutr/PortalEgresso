@@ -1,10 +1,9 @@
 package com.labprog.PortalEgressos.service;
 
-import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.models.Curso;
-import com.labprog.PortalEgressos.models.CursoEgresso;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
+import com.labprog.PortalEgressos.service.auth.UserProvider;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,13 +30,8 @@ public class EgressoServiceTest {
     @InjectMocks
     private EgressoService egressoService;
 
-    @InjectMocks
-    private DepoimentoService depoimentoService;
-
     private Egresso egresso;
-    private Cargo cargo;
     private Curso curso;
-    private CursoEgresso cursoEgresso;
 
     @BeforeEach
     public void setUp() {
@@ -47,21 +41,9 @@ public class EgressoServiceTest {
         egresso.setId(1L);
         egresso.setNome("João");
 
-        cargo = new Cargo();
-        cargo.setId(1L);
-        cargo.setDescricao("Desenvolvedor");
-        cargo.setEgresso(egresso);
-
         curso = new Curso();
         curso.setId(1L);
         curso.setNome("Engenharia de Software");
-
-        cursoEgresso = new CursoEgresso();
-        cursoEgresso.setId(1L);
-        cursoEgresso.setCurso(curso);
-        cursoEgresso.setEgresso(egresso);
-        cursoEgresso.setAnoInicio(2018);
-        cursoEgresso.setAnoFim(2022);
     }
 
     @Test
@@ -108,16 +90,6 @@ public class EgressoServiceTest {
         assertNotNull(egressos);
         assertEquals(1, egressos.size());
         assertTrue(egressos.stream().anyMatch(e -> e.getNome().equals("João")));
-    }
-
-    @Test
-    public void testObterPorCargo() {
-        when(egressoRepository.findActiveByCargoId(1L)).thenReturn(Optional.of(egresso));
-
-        Egresso result = egressoService.obterPorCargo(cargo.getId());
-
-        assertNotNull(result);
-        assertEquals("João", result.getNome());
     }
 
     @Test

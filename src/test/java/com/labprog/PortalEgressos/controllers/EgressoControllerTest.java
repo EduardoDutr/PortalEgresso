@@ -131,21 +131,6 @@ public class EgressoControllerTest {
     }
 
     @Test
-    public void deveObterPorCargoId() throws Exception{
-        Egresso egresso = Egresso.builder()
-                .id(1L)
-                .nome("NomeTeste")
-                .email("NomeTeste@email.com")
-                .build();
-
-        when(egressoService.obterPorCargo(any(Long.class))).thenReturn(egresso);
-
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/obterPorCargoId/1");
-
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     public void deveObterPorCursoId() throws Exception{
         Set<Egresso> egressoSet = new HashSet<>();
         Egresso egresso1 = Egresso.builder()

@@ -3,7 +3,6 @@ package com.labprog.PortalEgressos.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.labprog.PortalEgressos.DTO.CursoDTO;
 import com.labprog.PortalEgressos.models.Curso;
-import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.service.CursoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -98,7 +97,7 @@ public class CursoControllerTest {
                 .nivel("teste")
                 .build();
 
-        when(cursoService.associarEgresso(any(Long.class), any(Long.class))).thenReturn(curso);
+        when(cursoService.associarEgresso(any(), any(), any(), any())).thenReturn(curso);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/associar/1/1");
 

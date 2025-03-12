@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -110,7 +109,7 @@ public class CursoServiceTest {
         when(cursoRepository.findById(1L)).thenReturn(Optional.of(cur));
         when(egressoRepository.findById(1L)).thenReturn(Optional.of(egr));
 
-        var salvo = cursoService.associarEgresso(cur.getId(), egr.getId());
+        var salvo = cursoService.associarEgresso(cur.getId(), egr.getId(), 2021L, 2025L);
 
         assertNotNull(salvo);
 

@@ -25,34 +25,22 @@ public class OportunidadeController {
 
     @GetMapping
     public ResponseEntity<?> obterAtivos(){
-        try {
-            List<Oportunidade> egressos = service.obterAtivos();
-            List<OportunidadeDTO> egressosDTO = egressos.stream().map(OportunidadeDTO::new).toList();
-            return ResponseEntity.ok(egressosDTO);
-        } catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        List<Oportunidade> egressos = service.obterAtivos();
+        List<OportunidadeDTO> egressosDTO = egressos.stream().map(OportunidadeDTO::new).toList();
+        return ResponseEntity.ok(egressosDTO);
     }
 
     @PostMapping
     public ResponseEntity<?> salvar(@RequestBody OportunidadeDTO oportunidadeDTO){
-        try {
-            Oportunidade salvo = service.salvar(oportunidadeDTO.toOportunidade());
-            OportunidadeDTO egressoDTO = new OportunidadeDTO(salvo);
-            return ResponseEntity.ok(egressoDTO)    ;
-        } catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Oportunidade salvo = service.salvar(oportunidadeDTO.toOportunidade());
+        OportunidadeDTO egressoDTO = new OportunidadeDTO(salvo);
+        return ResponseEntity.ok(egressoDTO);
     }
 
     @DeleteMapping(value = "/{oportunidadeId}")
     public ResponseEntity<?> deletar(@PathVariable Long oportunidadeId){
-        try {
-            service.deletar(oportunidadeId);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        service.deletar(oportunidadeId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{oportunidadeId}/{status}")

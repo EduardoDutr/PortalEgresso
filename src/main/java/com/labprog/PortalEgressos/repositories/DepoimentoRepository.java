@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface DepoimentoRepository extends JpaRepository<Depoimento, Long> {
 
-    @Query("SELECT d FROM Depoimento d WHERE d.egresso.id = :egressoId AND d.egresso.status = 'ACTIVE'")
+    @Query("SELECT d FROM Depoimento d WHERE d.egresso.id = :id AND d.egresso.status = 'ACTIVE'")
     List<Depoimento> findAllByActiveEgressoId(Long id);
 }

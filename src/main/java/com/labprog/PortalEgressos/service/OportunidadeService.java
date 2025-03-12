@@ -2,7 +2,9 @@ package com.labprog.PortalEgressos.service;
 
 import com.labprog.PortalEgressos.models.Oportunidade;
 import com.labprog.PortalEgressos.repositories.OportunidadeRepository;
+import com.labprog.PortalEgressos.service.auth.UserProvider;
 import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
+import com.labprog.PortalEgressos.service.exceptions.InvalidOportunidadeException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +32,15 @@ public class OportunidadeService {
         return repository.findByStatus(PENDING);
     }
 
+    @Transactional
     public Oportunidade salvar(Oportunidade oportunidade) {
+        validateUserAuthenticated();
+        validar(oportunidade);
         oportunidade.setStatus(userIsAuthenticated() ? ACTIVE : PENDING);
         return repository.save(oportunidade);
     }
 
+    @Transactional
     public void ativar(Long oportunidadeId) {
         validateUserAuthenticated();
         Oportunidade oportunidade = repository.findById(oportunidadeId).orElseThrow();
@@ -56,5 +62,11 @@ public class OportunidadeService {
 
     private boolean userIsAuthenticated() {
         return userProvider.userIsAdmin();
+    }
+
+    private void validar(Oportunidade oportunidade) {
+        if (oportunidade == null || oportunidade.getTitulo() == null || oportunidade.getUrl() == null) {
+            throw new InvalidOportunidadeException();
+        }
     }
 }

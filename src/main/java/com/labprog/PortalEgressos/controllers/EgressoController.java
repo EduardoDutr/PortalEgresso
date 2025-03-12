@@ -18,109 +18,60 @@ import java.util.Set;
 public class EgressoController {
 
     @Autowired
-    EgressoService egressoService;
+    private EgressoService service;
 
     @GetMapping(value = "/obter/{egressoId}")
-    public ResponseEntity obterEgressoPorId(@PathVariable Long egressoId){
-        try{
-            Egresso egresso = egressoService.obterPorId(egressoId);
-
-            EgressoDTO egressoDTO = new EgressoDTO(egresso);
-
-            return ResponseEntity.ok(egressoDTO);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> obterEgressoPorId(@PathVariable Long egressoId){
+        Egresso egresso = service.obterPorId(egressoId);
+        EgressoDTO egressoDTO = new EgressoDTO(egresso);
+        return ResponseEntity.ok(egressoDTO);
     }
 
     @GetMapping(value = "/obterTodos")
-    public ResponseEntity obterTodosEgressos(){
-        try {
-            List<Egresso> egressos = egressoService.ativos();
-
-            List<EgressoDTO> egressosDTO = egressos.stream()
-                    .map(EgressoDTO::new)
-                    .toList();
-
-            return ResponseEntity.ok(egressosDTO);
-        } catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> obterTodosEgressos(){
+        List<Egresso> egressos = service.ativos();
+        List<EgressoDTO> egressosDTO = egressos.stream().map(EgressoDTO::new).toList();
+        return ResponseEntity.ok(egressosDTO);
     }
 
     @GetMapping(value = "/obterPorAno/{ano}")
-    public ResponseEntity obterPorAno(@PathVariable Long ano){
-        try {
-            Set<Egresso> egressos = egressoService.obterPorAno(ano);
-
-            List<EgressoDTO> egressosDTO = egressos.stream()
-                    .map(EgressoDTO::new)
-                    .toList();
-
-            return ResponseEntity.ok(egressosDTO);
-        } catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @GetMapping(value = "/obterPorCargoId/{cargoId}")
-    public ResponseEntity obterPorCargoId(@PathVariable Long cargoId){
-        try {
-            Egresso egresso = egressoService.obterPorCargo(cargoId);
-            EgressoDTO egressoDTO = new EgressoDTO(egresso);
-            return ResponseEntity.ok(egressoDTO);
-        } catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> obterPorAno(@PathVariable Long ano){
+        Set<Egresso> egressos = service.obterPorAno(ano);
+        List<EgressoDTO> egressosDTO = egressos.stream().map(EgressoDTO::new).toList();
+        return ResponseEntity.ok(egressosDTO);
     }
 
     @GetMapping(value = "/obterPorCursoId/{cursoId}")
-    public ResponseEntity obterPorCursoId(@PathVariable Long cursoId){
-        try {
-            Set<Egresso> egressos = egressoService.obterPorCurso(cursoId);
-
-            List<EgressoDTO> egressosDTO = egressos.stream()
-                    .map(EgressoDTO::new)
-                    .toList();
-
-            return ResponseEntity.ok(egressosDTO);
-        } catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> obterPorCursoId(@PathVariable Long cursoId){
+        Set<Egresso> egressos = service.obterPorCurso(cursoId);
+        List<EgressoDTO> egressosDTO = egressos.stream().map(EgressoDTO::new).toList();
+        return ResponseEntity.ok(egressosDTO);
     }
 
     @PostMapping(value = "/salvar")
-    public ResponseEntity salvar(@RequestBody Egresso egresso){
-        try {
-            Egresso salvo = egressoService.salvar(egresso);
-            EgressoDTO egressoDTO = new EgressoDTO(salvo);
-            return ResponseEntity.ok(egressoDTO);
-        } catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> salvar(@RequestBody Egresso egresso){
+        Egresso salvo = service.salvar(egresso);
+        EgressoDTO egressoDTO = new EgressoDTO(salvo);
+        return ResponseEntity.ok(egressoDTO);
     }
 
     @DeleteMapping(value = "/deletar/{egressoId}")
-    public ResponseEntity deletar(@PathVariable Long egressoId){
-        try {
-            egressoService.deletar(egressoId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> deletar(@PathVariable Long egressoId){
+        service.deletar(egressoId);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/pendentes")
     public ResponseEntity<List<EgressoDTO>> obterPendentes() {
-        List<EgressoDTO> egressos = egressoService.obterPendentes().stream().map(EgressoDTO::new).toList();
+        List<EgressoDTO> egressos = service.obterPendentes().stream().map(EgressoDTO::new).toList();
         return ResponseEntity.ok().body(egressos);
     }
 
     @PutMapping(value = "/{egressoId}/{status}")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long egressoId, @PathVariable Status status) {
         switch (status) {
-            case ACTIVE -> egressoService.ativar(egressoId);
-            case REJECTED -> egressoService.deletar(egressoId);
+            case ACTIVE -> service.ativar(egressoId);
+            case REJECTED -> service.deletar(egressoId);
         }
         return ResponseEntity.noContent().build();
     }

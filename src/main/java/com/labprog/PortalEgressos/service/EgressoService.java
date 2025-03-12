@@ -2,7 +2,10 @@ package com.labprog.PortalEgressos.service;
 
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
+import com.labprog.PortalEgressos.service.auth.UserProvider;
 import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
+import com.labprog.PortalEgressos.service.exceptions.EgressoNotFoundException;
+import com.labprog.PortalEgressos.service.exceptions.InvalidEgressoException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,10 +41,9 @@ public class EgressoService {
         egressoRepository.save(egresso);
     }
 
-
-
     @Transactional
     public Egresso salvar(Egresso egresso) {
+        validate(egresso);
         egresso.setStatus(userIsAuthenticated() ? ACTIVE : PENDING);
         return egressoRepository.save(egresso);
     }
@@ -53,15 +55,11 @@ public class EgressoService {
     }
 
     public Egresso obterPorId(Long id) {
-        return egressoRepository.findActiveById(id).orElseThrow();
+        return egressoRepository.findActiveById(id).orElseThrow(()-> new EgressoNotFoundException(id));
     }
 
     public Set<Egresso> obterPorCurso(Long cursoId) {
         return egressoRepository.findActiveByCursoId(cursoId);
-    }
-
-    public Egresso obterPorCargo(Long cargoId) {
-        return egressoRepository.findActiveByCargoId(cargoId).orElseThrow();
     }
 
     public Set<Egresso> obterPorAno(Long ano) {
@@ -76,5 +74,13 @@ public class EgressoService {
 
     private boolean userIsAuthenticated() {
         return userProvider.userIsAdmin();
+    }
+
+    private void validate(Egresso egresso) {
+        if (egresso == null ||
+            egresso.getNome() == null ||
+            egresso.getEmail() == null) {
+            throw new InvalidEgressoException();
+        }
     }
 }

@@ -8,6 +8,6 @@ import java.util.Set;
 
 public interface CargoRepository extends JpaRepository<Cargo, Long> {
 
-    @Query("SELECT c FROM Cargo c WHERE c.egresso.id = :egressoId AND c.egresso.status = 'ACTIVE'")
+    @Query("SELECT c FROM Cargo c WHERE c.egresso.id = :id AND c.egresso.status = 'ACTIVE'")
     Set<Cargo> findAllByActiveEgressoId(Long id);
 }

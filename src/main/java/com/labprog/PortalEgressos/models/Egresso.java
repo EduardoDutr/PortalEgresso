@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,11 @@ public class Egresso {
     @OneToMany(mappedBy = "egresso", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("egresso")
     private Set<CursoEgresso> cursos = new HashSet<>();
+
+    public void add(Depoimento depoimento) {
+        if (depoimentos == null) depoimentos = new ArrayList<>();
+        depoimentos.add(depoimento);
+    }
 
     public enum Status {
         ACTIVE,

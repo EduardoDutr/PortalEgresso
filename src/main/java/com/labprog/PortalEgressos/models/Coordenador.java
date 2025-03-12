@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -14,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Coordenador {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +21,4 @@ public class Coordenador {
     @Column(nullable = false)
     @JsonIgnore
     private String senha;
-
-    @OneToMany(mappedBy = "coordenador", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Curso> cursos = new ArrayList<>();
 }

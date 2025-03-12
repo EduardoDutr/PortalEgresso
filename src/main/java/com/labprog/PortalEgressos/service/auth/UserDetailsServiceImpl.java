@@ -1,4 +1,4 @@
-package com.labprog.PortalEgressos.service;
+package com.labprog.PortalEgressos.service.auth;
 
 import com.labprog.PortalEgressos.repositories.CoordenadorRepository;
 import com.labprog.PortalEgressos.repositories.UserAuthenticated;
