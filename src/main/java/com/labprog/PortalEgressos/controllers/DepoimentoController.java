@@ -5,12 +5,11 @@ import com.labprog.PortalEgressos.models.Depoimento;
 import com.labprog.PortalEgressos.service.DepoimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/depoimento")
 public class DepoimentoController {
 

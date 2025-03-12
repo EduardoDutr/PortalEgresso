@@ -5,13 +5,12 @@ import com.labprog.PortalEgressos.models.Cargo;
 import com.labprog.PortalEgressos.service.CargoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
 
-@Controller
+@RestController
 @RequestMapping(value = "/cargo")
 public class CargoController {
 

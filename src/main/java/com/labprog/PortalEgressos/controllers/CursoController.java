@@ -5,19 +5,17 @@ import com.labprog.PortalEgressos.models.Curso;
 import com.labprog.PortalEgressos.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/curso")
 public class CursoController {
     @Autowired
     CursoService cursoService;
 
-    @GetMapping
-    @RequestMapping(value = "/obterTodos")
+    @GetMapping("/obterTodos")
     public ResponseEntity<?> obterTodos(){
         try{
             List<Curso> cursos = cursoService.obterTodos();
@@ -29,8 +27,7 @@ public class CursoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @GetMapping
-    @RequestMapping(value = "/obter/{cursoId}")
+    @GetMapping("/obter/{cursoId}")
     public ResponseEntity<?> obter(@PathVariable Long cursoId){
         try{
             Curso result = cursoService.obter(cursoId);
@@ -41,8 +38,7 @@ public class CursoController {
         }
     }
 
-    @PostMapping
-    @RequestMapping(value = "/salvar")
+    @PostMapping("/salvar")
     public ResponseEntity<?> salvar(@RequestBody CursoDTO cursoDTO){
         Curso curso = Curso.builder()
                 .nome(cursoDTO.getNome())
@@ -53,22 +49,19 @@ public class CursoController {
         return ResponseEntity.ok(salvoDTO);
     }
 
-    @DeleteMapping
-    @RequestMapping(value = "/deletar/{cursoId}")
+    @DeleteMapping("/deletar/{cursoId}")
     public ResponseEntity deletar(@PathVariable Long cursoId){
         cursoService.deletar(cursoId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    @RequestMapping(value = "/associar")
+    @GetMapping("/associar")
     public ResponseEntity<?> associar(@RequestBody AssociarEgressoInput input){
         cursoService.associarEgresso(input.egressoId, input.cursoId, input.anoInicio, input.anoFim);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    @RequestMapping(value = "/obterPorEgresso/{egressoId}")
+    @GetMapping("/obterPorEgresso/{egressoId}")
     public ResponseEntity<?> obterPorEgresso(@PathVariable Long egressoId){
         List<Curso> result = cursoService.obterPorEgresso(egressoId);
         List<CursoDTO> resultDTO = result.stream().map(CursoDTO::new).toList();
