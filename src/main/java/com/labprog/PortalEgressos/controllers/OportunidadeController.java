@@ -45,7 +45,7 @@ public class OportunidadeController {
         }
     }
 
-    @DeleteMapping(value = "/deletar/{oportunidadeId}")
+    @DeleteMapping(value = "/{oportunidadeId}")
     public ResponseEntity<?> deletar(@PathVariable Long oportunidadeId){
         try {
             service.deletar(oportunidadeId);
