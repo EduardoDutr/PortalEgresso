@@ -4,6 +4,8 @@ import com.labprog.PortalEgressos.models.Curso;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import com.labprog.PortalEgressos.service.auth.UserProvider;
+import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
+import com.labprog.PortalEgressos.service.exceptions.InvalidEgressoException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,5 +105,41 @@ public class EgressoServiceTest {
         assertEquals(1, egressos.size());
         assertTrue(egressos.stream().anyMatch(e -> e.getNome().equals("João")));
     }
-}
 
+    @Test
+    public void testValidateEgresso_WhenEgressoIsNull_ShouldThrowException() {
+        InvalidEgressoException thrown = assertThrows(
+                InvalidEgressoException.class,
+                () -> egressoService.salvar(null)
+        );
+
+        assertNotNull(thrown);
+        assertEquals("O egresso não pode ser nulo.", thrown.getMessage());
+    }
+
+    @Test
+    public void testValidateEgresso_WhenEgressoNomeIsNull_ShouldThrowException() {
+        egresso.setNome(null);
+
+        InvalidEgressoException thrown = assertThrows(
+                InvalidEgressoException.class,
+                () -> egressoService.salvar(egresso)
+        );
+
+        assertNotNull(thrown);
+        assertEquals("O nome do egresso não pode ser nulo.", thrown.getMessage());
+    }
+
+    @Test
+    public void testValidateEgresso_WhenEgressoEmailIsNull_ShouldThrowException() {
+        egresso.setEmail(null);
+
+        InvalidEgressoException thrown = assertThrows(
+                InvalidEgressoException.class,
+                () -> egressoService.salvar(egresso)
+        );
+
+        assertNotNull(thrown);
+        assertEquals("O e-mail do egresso não pode ser nulo.", thrown.getMessage());
+    }
+}

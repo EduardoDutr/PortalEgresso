@@ -5,6 +5,8 @@ import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CargoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import com.labprog.PortalEgressos.service.auth.UserProvider;
+import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
+import com.labprog.PortalEgressos.service.exceptions.InvalidCargoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -97,5 +99,51 @@ public class CargoServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertTrue(result.contains(cargo));
+    }
+    @Test
+    public void testValidateUserAuthenticatedShouldThrowAuthorizationExceptionWhenUserIsNotAdmin() {
+        when(userProvider.userIsAdmin()).thenReturn(false);
+
+        assertThrows(AuthorizationException.class, () -> {
+            cargoService.criar(cargo, 1L);
+        });
+    }
+
+    @Test
+    public void testValidarCargoShouldThrowExceptionWhenCargoIsNull() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        assertThrows(InvalidCargoException.class, () -> {
+            cargoService.criar(null, 1L);
+        });
+    }
+
+    @Test
+    public void testValidarCargoShouldThrowExceptionWhenDescricaoIsNull() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        cargo.setDescricao(null);
+
+        assertThrows(InvalidCargoException.class, () -> {
+            cargoService.criar(cargo, 1L);
+        });
+    }
+
+    @Test
+    public void testValidarCargoShouldThrowExceptionWhenLocalIsNull() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        cargo.setLocal(null);
+
+        assertThrows(InvalidCargoException.class, () -> {
+            cargoService.criar(cargo, 1L);
+        });
+    }
+
+    @Test
+    public void testValidarCargoShouldThrowExceptionWhenAnoInicioIsNull() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        cargo.setAnoInicio(null);
+
+        assertThrows(InvalidCargoException.class, () -> {
+            cargoService.criar(cargo, 1L);
+        });
     }
 }
