@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleResourceNotFoundException(RuntimeException ex) {
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage());
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_GATEWAY);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RuntimeException.class)

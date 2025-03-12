@@ -40,6 +40,42 @@ public class CursoControllerTest {
     CursoService cursoService;
 
     @Test
+    public void deveObterTodosCursos() throws Exception {
+        List<Curso> cursos = new ArrayList<>();
+        cursos.add(Curso.builder().id(1L).nome("Curso 1").nivel("Graduação").build());
+        cursos.add(Curso.builder().id(2L).nome("Curso 2").nivel("Pós-Graduação").build());
+
+        when(cursoService.obterTodos()).thenReturn(cursos);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/obterTodos");
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L));
+    }
+
+    @Test
+    public void deveObterCursoPorId() throws Exception {
+        Curso curso = Curso.builder()
+                .id(1L)
+                .nome("Curso Teste")
+                .nivel("Graduação")
+                .build();
+
+        when(cursoService.obter(any(Long.class))).thenReturn(curso);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/obter/1");
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Curso Teste"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nivel").value("Graduação"));
+    }
+
+    @Test
     public void deveSalvarCurso() throws Exception{
         CursoDTO cursoDTO = CursoDTO.builder()
                 .nome("teste")
@@ -111,6 +147,25 @@ public class CursoControllerTest {
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/obterPorEgresso/1");
 
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L));
+    }
+
+    @Test
+    public void deveAssociarEgresso() throws Exception {
+        when(cursoService.associarEgresso(any(Long.class), any(Long.class), any(Long.class), any(Long.class))).thenReturn(null);
+
+        String json = new ObjectMapper().writeValueAsString(new CursoController.AssociarEgressoInput(1L, 1L, 2020L, 2024L));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/associar")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }

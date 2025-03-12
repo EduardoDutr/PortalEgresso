@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -162,5 +161,42 @@ public class EgressoControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(API + "/deletar/1");
 
         mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void deveObterEgressosPendentes() throws Exception {
+        List<Egresso> egressos = new ArrayList<>();
+        egressos.add(Egresso.builder().id(1L).nome("Egresso 1").email("egresso1@teste.com").build());
+        egressos.add(Egresso.builder().id(2L).nome("Egresso 2").email("egresso2@teste.com").build());
+
+        when(egressoService.obterPendentes()).thenReturn(egressos);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/pendentes");
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    public void deveAtualizarStatusDoEgressoComoActive() throws Exception {
+        doNothing().when(egressoService).ativar(any(Long.class));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(API + "/1/ACTIVE");
+
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        verify(egressoService).ativar(any());
+    }
+
+    @Test
+    public void deveAtualizarStatusDoEgressoComoRejected() throws Exception {
+        doNothing().when(egressoService).ativar(any(Long.class));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(API + "/1/REJECTED");
+
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        verify(egressoService).deletar(any());
     }
 }
