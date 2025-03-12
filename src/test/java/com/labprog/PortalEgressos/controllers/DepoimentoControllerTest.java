@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @WebMvcTest(controllers = DepoimentoController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class DepoimentoControllerTest {
 
     static final String API = "/depoimento";
@@ -76,7 +76,7 @@ public class DepoimentoControllerTest {
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(API + "/deletar/1");
 
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test

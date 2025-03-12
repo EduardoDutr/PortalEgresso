@@ -39,6 +39,7 @@ public class EgressoServiceTest {
 
         egresso = new Egresso();
         egresso.setId(1L);
+        egresso.setEmail("AS");
         egresso.setNome("João");
 
         curso = new Curso();

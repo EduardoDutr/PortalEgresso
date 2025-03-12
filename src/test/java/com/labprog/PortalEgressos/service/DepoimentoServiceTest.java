@@ -4,6 +4,7 @@ import com.labprog.PortalEgressos.models.Depoimento;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.DepoimentoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
+import com.labprog.PortalEgressos.service.auth.UserProvider;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class DepoimentoServiceTest {
 
+    @Mock
+    private UserProvider userProvider;
     @Mock
     private DepoimentoRepository depoimentoRepository;
     @Mock
@@ -52,6 +55,7 @@ public class DepoimentoServiceTest {
     @Test
     @Transactional
     public void testSalvarDepoimento() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
         when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depoimento);
         when(egressoRepository.findActiveById(egresso.getId())).thenReturn(Optional.of(egresso));
 
@@ -66,6 +70,7 @@ public class DepoimentoServiceTest {
     @Test
     @Transactional
     public void testDeletarDepoimento() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
         doNothing().when(depoimentoRepository).deleteById(any(Long.class));
 
         depoimentoService.delete(depoimento.getId());
@@ -85,6 +90,7 @@ public class DepoimentoServiceTest {
     }
     @Test
     public void testAssociarEgresso(){
+        when(userProvider.userIsAdmin()).thenReturn(true);
 
         Depoimento depo = Depoimento.builder()
                 .texto("TesteTexto")

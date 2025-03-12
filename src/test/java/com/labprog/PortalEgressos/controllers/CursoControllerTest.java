@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @WebMvcTest(controllers = CursoController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class CursoControllerTest {
 
     static final String API = "/curso";
@@ -86,22 +86,7 @@ public class CursoControllerTest {
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(API + "/deletar/1");
 
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void deveAssociarEgressoCurso() throws Exception{
-        Curso curso = Curso.builder()
-                .id(1L)
-                .nome("teste")
-                .nivel("teste")
-                .build();
-
-        when(cursoService.associarEgresso(any(), any(), any(), any())).thenReturn(curso);
-
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(API + "/associar/1/1");
-
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test

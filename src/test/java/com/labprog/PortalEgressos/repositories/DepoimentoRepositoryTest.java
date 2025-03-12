@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @SpringBootTest
 public class DepoimentoRepositoryTest {
 
@@ -30,6 +32,7 @@ public class DepoimentoRepositoryTest {
         Depoimento depoimento = Depoimento.builder()
                 .texto("Textin")
                 .egresso(egresso)
+                .data(new Date(1L))
                 .build();
 
         var salvado = depoimentoRepository.save(depoimento);

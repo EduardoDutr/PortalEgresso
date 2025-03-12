@@ -5,6 +5,7 @@ import com.labprog.PortalEgressos.models.CursoEgresso;
 import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CursoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
+import com.labprog.PortalEgressos.service.auth.UserProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +24,9 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class CursoServiceTest {
+
+    @Mock
+    private UserProvider userProvider;
 
     @Mock
     private CursoRepository cursoRepository;
@@ -60,6 +64,7 @@ public class CursoServiceTest {
     @Test
     @Transactional
     public void deveSalvarCurso() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
         when(cursoRepository.save(any(Curso.class))).thenReturn(curso);
 
         Curso result = cursoService.salvar(curso);
@@ -73,6 +78,7 @@ public class CursoServiceTest {
     @Test
     @Transactional
     public void deveDeletarCurso() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
         doNothing().when(cursoRepository).deleteById(any(Long.class));
 
         cursoService.deletar(curso.getId());
@@ -103,6 +109,8 @@ public class CursoServiceTest {
         egr.setId(1L);
         egr.setNome("A");
         egr.setEmail("a@exemplo.com");
+
+        when(userProvider.userIsAdmin()).thenReturn(true);
 
         when(cursoRepository.save(any(Curso.class))).thenReturn(cur);
 

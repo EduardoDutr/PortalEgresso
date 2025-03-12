@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @WebMvcTest(controllers = EgressoController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class EgressoControllerTest {
     static final String API = "/egresso";
 

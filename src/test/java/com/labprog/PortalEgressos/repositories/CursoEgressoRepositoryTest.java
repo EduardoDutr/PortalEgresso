@@ -41,6 +41,7 @@ public class CursoEgressoRepositoryTest {
                 .egresso(egresso)
                 .curso(curso)
                 .anoInicio(1)
+                .anoFim(1)
                 .build();
 
         var salvado = cursoEgressoRepository.save(cursoEgresso);
@@ -74,6 +75,7 @@ public class CursoEgressoRepositoryTest {
                 .egresso(egresso)
                 .curso(curso)
                 .anoInicio(1)
+                .anoFim(1)
                 .build();
 
         cursoEgressoRepository.save(cursoEgresso);
