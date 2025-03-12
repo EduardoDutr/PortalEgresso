@@ -1,4 +1,10 @@
 services:
+  portal-egresso:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
   mysql:
     image: mysql:8.0
     container_name: mysql_container
