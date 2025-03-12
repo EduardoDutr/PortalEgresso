@@ -1,7 +1,6 @@
 package com.labprog.PortalEgressos.service;
 
 import com.labprog.PortalEgressos.models.Egresso;
-import com.labprog.PortalEgressos.models.Egresso.Status;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
 import jakarta.transaction.Transactional;
@@ -32,12 +31,14 @@ public class EgressoService {
     }
 
     @Transactional
-    public void atualizarStatus(Long egressoId, Status status) {
+    public void ativar(Long egressoId) {
         validateUserAuthenticated();
         Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
-        egresso.setStatus(status);
+        egresso.setStatus(ACTIVE);
         egressoRepository.save(egresso);
     }
+
+
 
     @Transactional
     public Egresso salvar(Egresso egresso) {

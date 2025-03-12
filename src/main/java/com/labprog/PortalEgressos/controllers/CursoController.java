@@ -19,7 +19,7 @@ public class CursoController {
 
     @GetMapping
     @RequestMapping(value = "/obter/{cursoId}")
-    public ResponseEntity obter(@PathVariable Long cursoId){
+    public ResponseEntity<?> obter(@PathVariable Long cursoId){
         try{
             Curso result = cursoService.obter(cursoId);
             CursoDTO resultDTO = new CursoDTO(result);
@@ -31,7 +31,7 @@ public class CursoController {
 
     @PostMapping
     @RequestMapping(value = "/salvar")
-    public ResponseEntity salvar(@RequestBody CursoDTO cursoDTO){
+    public ResponseEntity<?> salvar(@RequestBody CursoDTO cursoDTO){
         try{
             Curso curso = Curso.builder()
                     .nome(cursoDTO.getNome())
@@ -60,7 +60,7 @@ public class CursoController {
 
     @GetMapping
     @RequestMapping(value = "/associar/{egressoId}/{cursoId}")
-    public ResponseEntity associar(@PathVariable Long egressoId, @PathVariable Long cursoId){
+    public ResponseEntity<?> associar(@PathVariable Long egressoId, @PathVariable Long cursoId){
         try{
             cursoService.associarEgresso(egressoId, cursoId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -71,7 +71,7 @@ public class CursoController {
 
     @GetMapping
     @RequestMapping(value = "/obterPorEgresso/{egressoId}")
-    public ResponseEntity obterPorEgresso(@PathVariable Long egressoId){
+    public ResponseEntity<?> obterPorEgresso(@PathVariable Long egressoId){
         try {
             List<Curso> result = cursoService.obterPorEgresso(egressoId);
 

@@ -118,7 +118,10 @@ public class EgressoController {
 
     @PutMapping(value = "/{egressoId}/{status}")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long egressoId, @PathVariable Status status) {
-        egressoService.atualizarStatus(egressoId, status);
+        switch (status) {
+            case ACTIVE -> egressoService.ativar(egressoId);
+            case REJECTED -> egressoService.deletar(egressoId);
+        }
         return ResponseEntity.noContent().build();
     }
 }
