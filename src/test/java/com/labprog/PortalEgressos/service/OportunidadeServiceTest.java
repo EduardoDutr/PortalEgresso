@@ -43,7 +43,7 @@ public class OportunidadeServiceTest {
     }
 
     @Test
-    public void testObterAtivos() {
+    public void deveObterAtivos() {
         when(repository.findByStatus(ACTIVE)).thenReturn(List.of(oportunidade));
 
         List<Oportunidade> result = service.obterAtivos();
@@ -54,7 +54,7 @@ public class OportunidadeServiceTest {
     }
 
     @Test
-    public void testObterPendentes() {
+    public void deveObterPendentes() {
         when(repository.findByStatus(PENDING)).thenReturn(List.of(oportunidade));
         when(userProvider.userIsAdmin()).thenReturn(true);
 
@@ -66,7 +66,20 @@ public class OportunidadeServiceTest {
 
     @Test
     @Transactional
-    public void testSalvar() {
+    public void deveSalvarComoPendingQuandoSemLogin() {
+        when(repository.save(any(Oportunidade.class))).thenReturn(oportunidade);
+        when(userProvider.userIsAdmin()).thenReturn(false);
+
+        Oportunidade result = service.salvar(oportunidade);
+
+        verify(repository).save(any(Oportunidade.class));
+        assertNotNull(result);
+        assertEquals(PENDING, result.getStatus());
+    }
+
+    @Test
+    @Transactional
+    public void deveSalvarComoActiveQuandoEOCoordenador() {
         when(repository.save(any(Oportunidade.class))).thenReturn(oportunidade);
         when(userProvider.userIsAdmin()).thenReturn(true);
 
@@ -79,7 +92,7 @@ public class OportunidadeServiceTest {
 
     @Test
     @Transactional
-    public void testAtivar() {
+    public void deveAtivar() {
         when(repository.findById(1L)).thenReturn(Optional.of(oportunidade));
         when(userProvider.userIsAdmin()).thenReturn(true);
 
@@ -91,7 +104,7 @@ public class OportunidadeServiceTest {
 
     @Test
     @Transactional
-    public void testDeletar() {
+    public void deveDeletar() {
         when(userProvider.userIsAdmin()).thenReturn(true);
         doNothing().when(repository).deleteById(1L);
 
@@ -101,7 +114,7 @@ public class OportunidadeServiceTest {
     }
 
     @Test
-    public void testValidarOportunidadeNula() {
+    public void deveValidarOportunidadeNula() {
         Exception exception = assertThrows(InvalidOportunidadeException.class, () -> {
             service.salvar(null);
         });
@@ -109,7 +122,7 @@ public class OportunidadeServiceTest {
     }
 
     @Test
-    public void testValidarTituloNulo() {
+    public void deveValidarTituloNulo() {
         oportunidade.setTitulo(null);
         Exception exception = assertThrows(InvalidOportunidadeException.class, () -> {
             service.salvar(oportunidade);
@@ -118,7 +131,7 @@ public class OportunidadeServiceTest {
     }
 
     @Test
-    public void testValidarUrlNula() {
+    public void deveValidarUrlNula() {
         oportunidade.setUrl(null);
         Exception exception = assertThrows(InvalidOportunidadeException.class, () -> {
             service.salvar(oportunidade);
@@ -127,7 +140,7 @@ public class OportunidadeServiceTest {
     }
 
     @Test
-    public void testValidarUsuarioNaoAutenticado() {
+    public void deveValidarUsuarioNaoAutenticado() {
         when(userProvider.userIsAdmin()).thenReturn(false);
         Exception exception = assertThrows(AuthorizationException.class, () -> {
             service.obterPendentes();

@@ -52,6 +52,11 @@ public class Egresso {
         depoimentos.add(depoimento);
     }
 
+    public void add(Cargo cargo) {
+        if (cargos == null) cargos = new ArrayList<>();
+        cargos.add(cargo);
+    }
+
     public enum Status {
         ACTIVE,
         REJECTED,

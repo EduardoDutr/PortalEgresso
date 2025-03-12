@@ -6,6 +6,7 @@ import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.CursoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import com.labprog.PortalEgressos.service.auth.UserProvider;
+import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
 import com.labprog.PortalEgressos.service.exceptions.CursoNotFoundException;
 import com.labprog.PortalEgressos.service.exceptions.EgressoNotFoundException;
 import com.labprog.PortalEgressos.service.exceptions.InvalidCursoException;
@@ -78,6 +79,18 @@ public class CursoServiceTest {
     }
 
     @Test
+    public void deveObterTodosCursosAtivos() {
+        when(cursoRepository.findAll()).thenReturn(List.of(curso));
+
+        List<Curso> cursos = cursoService.obterTodos();
+
+        assertNotNull(cursos);
+        assertEquals(1, cursos.size());
+        assertEquals("Curso de TI", cursos.get(0).getNome());
+
+    }
+
+    @Test
     @Transactional
     public void deveDeletarCurso() {
         when(userProvider.userIsAdmin()).thenReturn(true);
@@ -134,10 +147,23 @@ public class CursoServiceTest {
     }
 
     @Test
-    public void deveLancarExcecaoQuandoSalvarCursoInvalido() {
+    public void deveLancarExcecaoQuandoSalvarCursoNulo() {
         when(userProvider.userIsAdmin()).thenReturn(true);
-        Curso cursoInvalido = new Curso();
-        assertThrows(InvalidCursoException.class, () -> cursoService.salvar(cursoInvalido));
+        assertThrows(InvalidCursoException.class, () -> cursoService.salvar(null));
+    }
+
+    @Test
+    public void deveLancarExcecaoQuandoSalvarCursoSemNome() {
+        curso.setNome(null);
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        assertThrows(InvalidCursoException.class, () -> cursoService.salvar(curso));
+    }
+
+    @Test
+    public void deveLancarExcecaoQuandoSalvarCursoSemNivel() {
+        curso.setNivel(null);
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        assertThrows(InvalidCursoException.class, () -> cursoService.salvar(curso));
     }
 
     @Test
@@ -154,5 +180,55 @@ public class CursoServiceTest {
         when(cursoRepository.findById(2L)).thenReturn(Optional.empty());
         when(egressoRepository.findById(1L)).thenReturn(Optional.of(egresso));
         assertThrows(CursoNotFoundException.class, () -> cursoService.associarEgresso(1L, 2L, 2020L, 2024L));
+    }
+
+    @Test
+    public void deveLancarExcecaoAoTentarAssociarSemAnoFim() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        when(egressoRepository.findById(2L)).thenReturn(Optional.of(egresso));
+        when(cursoRepository.findById(1L)).thenReturn(Optional.of(curso));
+        assertThrows(IllegalArgumentException.class, () -> cursoService.associarEgresso(2L, 1L, 2020L, null));
+    }
+
+    @Test
+    public void deveLancarExcecaoAoTentarAssociarSemLogin() {
+        when(userProvider.userIsAdmin()).thenReturn(false);
+        assertThrows(AuthorizationException.class, () -> cursoService.associarEgresso(2L, 1L, 2020L, 2024L));
+    }
+
+    @Test
+    public void deveLancarExcecaoAoTentarSalvarSemLogin() {
+        when(userProvider.userIsAdmin()).thenReturn(false);
+        assertThrows(AuthorizationException.class, () -> cursoService.salvar(curso));
+    }
+
+    @Test
+    public void deveLancarExcecaoAoTentarDeletarSemLogin() {
+        when(userProvider.userIsAdmin()).thenReturn(false);
+        assertThrows(AuthorizationException.class, () -> cursoService.associarEgresso(2L, 1L, 2020L, 2024L));
+    }
+
+    @Test
+    public void deveLancarExcecaoAoTentarAssociarSemEgressoId() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        when(egressoRepository.findById(2L)).thenReturn(Optional.of(egresso));
+        when(cursoRepository.findById(1L)).thenReturn(Optional.of(curso));
+        assertThrows(IllegalArgumentException.class, () -> cursoService.associarEgresso(null, 1L, 2020L, 2024L));
+    }
+
+    @Test
+    public void deveLancarExcecaoAoTentarAssociarSemAnoInicio() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        when(egressoRepository.findById(2L)).thenReturn(Optional.of(egresso));
+        when(cursoRepository.findById(1L)).thenReturn(Optional.of(curso));
+        assertThrows(IllegalArgumentException.class, () -> cursoService.associarEgresso(2L, 1L, null, 2024L));
+    }
+
+    @Test
+    public void deveLancarExcecaoAoTentarAssociarSemCursoId() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+        when(egressoRepository.findById(2L)).thenReturn(Optional.of(egresso));
+        when(cursoRepository.findById(1L)).thenReturn(Optional.of(curso));
+        assertThrows(IllegalArgumentException.class, () -> cursoService.associarEgresso(2L, null, 2020L, 2024L));
     }
 }

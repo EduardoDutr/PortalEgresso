@@ -78,7 +78,7 @@ public class CargoServiceTest {
 
     @Test
     @Transactional
-    public void testDeletarCargo() {
+    public void deveDeletarCargo() {
         doNothing().when(cargoRepository).deleteById(any(Long.class));
         when(userProvider.userIsAdmin()).thenReturn(true);
 
@@ -88,7 +88,7 @@ public class CargoServiceTest {
     }
 
     @Test
-    public void testObterPorEgresso() {
+    public void deveObterPorEgresso() {
         Set<Cargo> cargosSet = new HashSet<>();
         cargosSet.add(cargo);
 
@@ -101,7 +101,7 @@ public class CargoServiceTest {
         assertTrue(result.contains(cargo));
     }
     @Test
-    public void testValidateUserAuthenticatedShouldThrowAuthorizationExceptionWhenUserIsNotAdmin() {
+    public void deveValidateUserAuthenticatedShouldThrowAuthorizationExceptionWhenUserIsNotAdmin() {
         when(userProvider.userIsAdmin()).thenReturn(false);
 
         assertThrows(AuthorizationException.class, () -> {
@@ -110,7 +110,7 @@ public class CargoServiceTest {
     }
 
     @Test
-    public void testValidarCargoShouldThrowExceptionWhenCargoIsNull() {
+    public void deveValidarCargoShouldThrowExceptionWhenCargoIsNull() {
         when(userProvider.userIsAdmin()).thenReturn(true);
         assertThrows(InvalidCargoException.class, () -> {
             cargoService.criar(null, 1L);
@@ -118,7 +118,7 @@ public class CargoServiceTest {
     }
 
     @Test
-    public void testValidarCargoShouldThrowExceptionWhenDescricaoIsNull() {
+    public void deveValidarCargoShouldThrowExceptionWhenDescricaoIsNull() {
         when(userProvider.userIsAdmin()).thenReturn(true);
         cargo.setDescricao(null);
 
@@ -128,7 +128,7 @@ public class CargoServiceTest {
     }
 
     @Test
-    public void testValidarCargoShouldThrowExceptionWhenLocalIsNull() {
+    public void deveValidarCargoShouldThrowExceptionWhenLocalIsNull() {
         when(userProvider.userIsAdmin()).thenReturn(true);
         cargo.setLocal(null);
 
@@ -138,7 +138,7 @@ public class CargoServiceTest {
     }
 
     @Test
-    public void testValidarCargoShouldThrowExceptionWhenAnoInicioIsNull() {
+    public void deveValidarCargoShouldThrowExceptionWhenAnoInicioIsNull() {
         when(userProvider.userIsAdmin()).thenReturn(true);
         cargo.setAnoInicio(null);
 

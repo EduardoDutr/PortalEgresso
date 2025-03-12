@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 @Service
@@ -31,10 +30,7 @@ public class CargoService {
         Egresso egresso = egressoRepository.findById(egressoId).orElseThrow();
 
         cargo.setEgresso(egresso);
-        if(egresso.getDepoimentos() == null){
-            egresso.setCargos(new ArrayList<>());
-        }
-        egresso.getCargos().add(cargo);
+        egresso.add(cargo);
         return repository.save(cargo);
     }
 

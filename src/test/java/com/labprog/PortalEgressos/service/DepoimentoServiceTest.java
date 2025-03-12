@@ -5,6 +5,8 @@ import com.labprog.PortalEgressos.models.Egresso;
 import com.labprog.PortalEgressos.repositories.DepoimentoRepository;
 import com.labprog.PortalEgressos.repositories.EgressoRepository;
 import com.labprog.PortalEgressos.service.auth.UserProvider;
+import com.labprog.PortalEgressos.service.exceptions.AuthorizationException;
+import com.labprog.PortalEgressos.service.exceptions.InvalidDepoimentoException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -54,7 +55,7 @@ public class DepoimentoServiceTest {
 
     @Test
     @Transactional
-    public void testSalvarDepoimento() {
+    public void deveSalvarDepoimento() {
         when(userProvider.userIsAdmin()).thenReturn(true);
         when(depoimentoRepository.save(any(Depoimento.class))).thenReturn(depoimento);
         when(egressoRepository.findActiveById(egresso.getId())).thenReturn(Optional.of(egresso));
@@ -68,8 +69,46 @@ public class DepoimentoServiceTest {
     }
 
     @Test
+    public void lancaExcecaoAoTentarSalvarDepoimentoSemLogin() {
+        when(userProvider.userIsAdmin()).thenReturn(false);
+
+        assertThrows(
+                AuthorizationException.class,
+                () -> depoimentoService.salvar(depoimento, egresso.getId())
+        );
+
+        verify(depoimentoRepository, never()).save(depoimento);
+    }
+
+    @Test
+    public void lancaExcecaoAoTentarSalvarDepoimentoNulo() {
+        when(userProvider.userIsAdmin()).thenReturn(true);
+
+        assertThrows(
+                InvalidDepoimentoException.class,
+                () -> depoimentoService.salvar(null, egresso.getId())
+        );
+
+        verify(depoimentoRepository, never()).save(depoimento);
+    }
+
+    @Test
+    public void lancaExcecaoAoTentarSalvarDepoimentoComTextoNulo() {
+        depoimento.setTexto(null);
+        when(userProvider.userIsAdmin()).thenReturn(true);
+
+        assertThrows(
+                InvalidDepoimentoException.class,
+                () -> depoimentoService.salvar(depoimento, egresso.getId())
+        );
+
+        verify(depoimentoRepository, never()).save(depoimento);
+    }
+
+
+    @Test
     @Transactional
-    public void testDeletarDepoimento() {
+    public void deveDeletarDepoimento() {
         when(userProvider.userIsAdmin()).thenReturn(true);
         doNothing().when(depoimentoRepository).deleteById(any(Long.class));
 
@@ -79,7 +118,19 @@ public class DepoimentoServiceTest {
     }
 
     @Test
-    public void testObterDepoimentosPorEgresso() {
+    public void lancaExcecaoAoTentarDeletarDepoimentoSemLogin() {
+        when(userProvider.userIsAdmin()).thenReturn(false);
+
+        assertThrows(
+                AuthorizationException.class,
+                () -> depoimentoService.delete(depoimento.getId())
+        );
+
+        verify(depoimentoRepository, never()).deleteById(depoimento.getId());
+    }
+
+    @Test
+    public void deveObterDepoimentosPorEgresso() {
         when(depoimentoRepository.findAllByActiveEgressoId(1L)).thenReturn(Arrays.asList(depoimento));
 
         List<Depoimento> depoimentos = depoimentoService.obterPorEgresso(1L);
@@ -89,7 +140,7 @@ public class DepoimentoServiceTest {
         assertEquals("Excelente curso!", depoimentos.get(0).getTexto());
     }
     @Test
-    public void testAssociarEgresso(){
+    public void deveAssociarEgresso(){
         when(userProvider.userIsAdmin()).thenReturn(true);
 
         Depoimento depo = Depoimento.builder()
