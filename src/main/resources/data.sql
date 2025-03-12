@@ -1,1 +1,1 @@
-INSERT INTO COORDENADOR (LOGIN, SENHA) VALUES ('username', '$2a$12$I9nkUDrzjIe3CSiWAtOzyeNfINhfimB4pmlekUEuJDNZlFdVSB9dS');
+INSERT INTO coordenador (login, senha) VALUES ('username', '$2a$12$I9nkUDrzjIe3CSiWAtOzyeNfINhfimB4pmlekUEuJDNZlFdVSB9dS');
