@@ -48,7 +48,7 @@ public class CursoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/associar")
+    @PostMapping("/associar")
     public ResponseEntity<?> associar(@RequestBody AssociarEgressoInput input){
         cursoService.associarEgresso(input.egressoId, input.cursoId, input.anoInicio, input.anoFim);
         return ResponseEntity.noContent().build();
